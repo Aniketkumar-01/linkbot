@@ -71,3 +71,49 @@ class AIProvider:
             return data
         except Exception as e:
             return {"error": f"Failed to extract data: {str(e)}"}
+
+    def extract_user_profile(self, text: str) -> dict:
+        if not self.is_configured:
+            return {"error": "AI API Key is not configured."}
+        
+        try:
+            from google import genai
+            import json
+            
+            client = genai.Client(api_key=self.api_key)
+            
+            prompt = f"""
+            Extract the following profile information from the provided resume text.
+            This is for a networking app. Figure out what their current/target job titles might be, and what industries they are in.
+            
+            Return exactly this JSON schema:
+            {{
+                "name": "string",
+                "university": "string",
+                "degree": "string",
+                "graduation_year": "string",
+                "location": "string",
+                "current_status": "string",
+                "technical_interests": ["string"],
+                "target_job_titles": ["string"],
+                "target_companies": ["string"],
+                "target_industries": ["string"]
+            }}
+            
+            Text:
+            {text}
+            """
+            
+            response = client.models.generate_content(
+                model='gemini-3.6-flash',
+                contents=prompt,
+                config={
+                    'response_mime_type': 'application/json',
+                    'temperature': 0.1
+                },
+            )
+            
+            data = json.loads(response.text)
+            return data
+        except Exception as e:
+            return {"error": f"Failed to extract profile: {str(e)}"}

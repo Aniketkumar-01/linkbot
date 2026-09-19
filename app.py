@@ -22,7 +22,7 @@ pages = {
     ],
     "Candidates": [
         st.Page("pages/candidates.py", title="Candidates List", icon="👥"),
-        st.Page("pages/add_candidates.py", title="Add Candidates", icon="➕"),
+        st.Page("pages/add_candidates.py", title="Discover Candidates", icon="🚀"),
     ],
     "Networking": [
         st.Page("pages/networking.py", title="Networking Tracker", icon="📈"),

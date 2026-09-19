@@ -7,3 +7,4 @@ plotly
 google-genai
 beautifulsoup4
 requests
+duckduckgo-search
