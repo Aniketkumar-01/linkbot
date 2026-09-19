@@ -9,12 +9,8 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Initialize database
-@st.cache_resource
-def setup_db():
-    init_db()
-
-setup_db()
+# Initialize database tables if they don't exist
+init_db()
 
 # Application Sidebar / Navigation
 st.sidebar.title("LinkedIn Networking Assistant")
