@@ -2,13 +2,14 @@ import streamlit as st
 from database.db import SessionLocal
 from database.models import Candidate, NetworkingStatus
 from datetime import datetime
+from sqlalchemy.orm import joinedload
 
 st.title("Networking Tracker")
 st.markdown("Track your manual outreach progress.")
 
 def get_networking_data():
     with SessionLocal() as db:
-        return db.query(NetworkingStatus).join(Candidate).all()
+        return db.query(NetworkingStatus).options(joinedload(NetworkingStatus.candidate)).all()
 
 def update_status(status_id: int, new_status: str):
     with SessionLocal() as db:

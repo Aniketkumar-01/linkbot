@@ -2,12 +2,13 @@ import streamlit as st
 import pandas as pd
 from database.db import SessionLocal
 from database.models import Candidate
+from sqlalchemy.orm import joinedload
 
 st.title("Candidates List")
 
 def get_all_candidates():
     with SessionLocal() as db:
-        return db.query(Candidate).all()
+        return db.query(Candidate).options(joinedload(Candidate.score)).all()
 
 candidates = get_all_candidates()
 
