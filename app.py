@@ -19,7 +19,6 @@ st.sidebar.markdown("Manage your professional network efficiently.")
 pages = {
     "Overview": [
         st.Page("pages/dashboard.py", title="Dashboard", icon="📊"),
-        st.Page("pages/recommendations.py", title="Recommendations", icon="💡"),
     ],
     "Candidates": [
         st.Page("pages/candidates.py", title="Candidates List", icon="👥"),
@@ -27,11 +26,9 @@ pages = {
     ],
     "Networking": [
         st.Page("pages/networking.py", title="Networking Tracker", icon="📈"),
-        st.Page("pages/messages.py", title="Messages", icon="✉️"),
     ],
     "Configuration": [
         st.Page("pages/settings.py", title="Settings", icon="⚙️"),
-        st.Page("pages/data.py", title="Data Management", icon="💾"),
     ]
 }
 

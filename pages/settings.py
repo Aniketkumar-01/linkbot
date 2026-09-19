@@ -1,7 +1,7 @@
 import streamlit as st
 from services.data_manager import save_user_profile, get_user_profile
 from services.ai import AIProvider
-
+from services.csv_handler import export_candidates_to_csv
 st.title("Settings & Profile")
 
 profile = get_user_profile()
@@ -48,3 +48,20 @@ if ai_provider.is_configured:
     st.success(f"AI Provider ({ai_provider.provider}) is configured and active.")
 else:
     st.info("AI features are currently disabled. The deterministic networking assistant is fully functional. To enable AI, configure AI_API_KEY in the .env file.")
+
+st.divider()
+
+st.subheader("Data Management")
+st.markdown("Export your networking data to CSV for backup.")
+if st.button("Export Candidates to CSV"):
+    df = export_candidates_to_csv()
+    if not df.empty:
+        csv = df.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            label="Download CSV",
+            data=csv,
+            file_name='candidates_export.csv',
+            mime='text/csv',
+        )
+    else:
+        st.warning("No candidates to export.")

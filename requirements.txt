@@ -4,3 +4,6 @@ SQLAlchemy
 pytest
 python-dotenv
 plotly
+google-genai
+beautifulsoup4
+requests
