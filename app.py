@@ -12,8 +12,7 @@ st.set_page_config(
 # Initialize database
 @st.cache_resource
 def setup_db():
-    if not os.path.exists("networking.db"):
-        init_db()
+    init_db()
 
 setup_db()
 
