@@ -59,7 +59,7 @@ def gemini_deep_ranking(user_profile: UserProfile, top_suggestions: list[LinkedI
     """
     try:
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-2.5-flash')
+        model = genai.GenerativeModel('gemini-3.6-flash')
         
         user_context = f"User Profile: {user_profile.headline}, Skills: {', '.join(user_profile.skills)}, Experience: {user_profile.experience_years} years, Location: {user_profile.location}"
         
@@ -81,6 +81,7 @@ def gemini_deep_ranking(user_profile: UserProfile, top_suggestions: list[LinkedI
         - "index": the index number from the list
         - "score": 0 to 100 representing relevance
         - "reason": a short 1-sentence reason why they should connect
+        - "connect_message": a personalized 2-3 sentence message the user can copy and paste to send a connection request to this person. It should mention why they are connecting based on mutual skills or industry.
         
         Return ONLY a JSON array of objects.
         """
@@ -100,6 +101,7 @@ def gemini_deep_ranking(user_profile: UserProfile, top_suggestions: list[LinkedI
             if 0 <= idx < len(top_suggestions):
                 top_suggestions[idx].relevance_score = r.get("score", top_suggestions[idx].relevance_score)
                 top_suggestions[idx].reason = r.get("reason", "")
+                top_suggestions[idx].connect_message = r.get("connect_message", "")
                 
     except Exception as e:
         st.toast(f"Deep ranking failed (using fallback scores): {e}")
@@ -125,13 +127,13 @@ def rank_and_score_results(user_profile: UserProfile, suggestions: list[LinkedIn
     # Sort by fast score initially
     unique_suggestions.sort(key=lambda x: x.relevance_score, reverse=True)
     
-    # 4. Use Gemini to deeply score the top 15 results
+    # 4. Use Gemini to deeply score the top 25 results
     if gemini_api_key and unique_suggestions:
-        top_n = unique_suggestions[:15]
+        top_n = unique_suggestions[:25]
         gemini_deep_ranking(user_profile, top_n, gemini_api_key)
         
         # Multiply fast score by 100 for the rest to match 0-100 scale
-        for s in unique_suggestions[15:]:
+        for s in unique_suggestions[25:]:
             s.relevance_score = round(s.relevance_score * 100)
     else:
         # Convert fast score (0.0-1.0) to percentage (0-100) for display

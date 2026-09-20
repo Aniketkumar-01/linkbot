@@ -58,7 +58,7 @@ def generate_search_queries(profile: UserProfile) -> dict[str, list[str]]:
         
     return queries
 
-def execute_search_ddg(query: str, category: str, max_results: int = 10) -> list[LinkedInSuggestion]:
+def execute_search_ddg(query: str, category: str, max_results: int = 20) -> list[LinkedInSuggestion]:
     """
     Executes a single search using DuckDuckGo.
     """
@@ -90,7 +90,7 @@ def execute_search_ddg(query: str, category: str, max_results: int = 10) -> list
         
     return suggestions
 
-def execute_search_serper(query: str, category: str, api_key: str, max_results: int = 10) -> list[LinkedInSuggestion]:
+def execute_search_serper(query: str, category: str, api_key: str, max_results: int = 20) -> list[LinkedInSuggestion]:
     """
     Executes a single search using Serper.dev API (if provided).
     """

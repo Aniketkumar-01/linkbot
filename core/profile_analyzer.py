@@ -15,8 +15,8 @@ def analyze_profile_with_gemini(text: str, api_key: str) -> UserProfile:
     """
     configure_gemini(api_key)
     
-    # We use gemini-2.5-flash as it's fast and excellent at structured extraction
-    model = genai.GenerativeModel('gemini-2.5-flash')
+    # We use gemini-3.6-flash as it's fast and excellent at structured extraction
+    model = genai.GenerativeModel('gemini-3.6-flash')
     
     prompt = f"""
     You are an expert career advisor and technical recruiter.

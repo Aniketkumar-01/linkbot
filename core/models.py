@@ -23,3 +23,4 @@ class LinkedInSuggestion(BaseModel):
     category: str = "Unknown"
     reason: str = ""
     action: str = "Connect"
+    connect_message: str = ""
