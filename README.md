@@ -1,85 +1,50 @@
-# LinkedIn Networking Assistant
+# LinkBot 🔗
 
-A personal networking assistant built with Python and Streamlit. This tool helps you organize, score, and prioritize LinkedIn profiles to decide whether to Connect, Follow, or Ignore them. 
-
-**Important:** This application strictly respects LinkedIn's Terms of Service by **NOT** automating any interactions. It acts as an offline-first CRM for your networking efforts.
+LinkBot is a free, AI-powered Streamlit web application that analyzes your resume or GitHub profile to find relevant professionals you should connect with or follow on LinkedIn.
 
 ## Features
-- **Zero-Cost:** Runs locally using SQLite, Streamlit, and Python. No paid APIs or databases required.
-- **Deterministic Scoring:** Transparently scores candidates based on your configured profile preferences (role, skills, company, education).
-- **Networking Tracker:** A Kanban-style board to track the status of your networking efforts (New -> Reviewed -> Follow -> Connect -> Messaged).
-- **Message Generator:** Generates connection messages.
-- **CSV Support:** Import and export your candidates to backup your data.
-- **Optional AI:** The app runs perfectly offline. Optionally, add an `AI_API_KEY` in your `.env` for AI-powered messaging.
+- **Intelligent Profile Analysis**: Uses Google Gemini API to extract your skills, titles, and experience from a PDF resume or GitHub profile.
+- **Automated Discovery**: Uses DuckDuckGo search (or Serper.dev) to find relevant LinkedIn profiles without scraping LinkedIn directly.
+- **Smart Categorization**: Groups suggestions into categories like "Same Role", "Recruiters", "Thought Leaders", and "Alumni".
+- **Completely Free**: No paid APIs required (Gemini has a generous free tier, DuckDuckGo is free).
+- **Privacy First**: No LinkedIn login required. Does not store your resume.
 
-## Tech Stack
-- **Frontend / UI:** Streamlit
-- **Backend / Logic:** Python
-- **Database:** SQLite (managed via SQLAlchemy)
-- **Data Manipulation:** Pandas
+## Setup Instructions
 
-## Project Structure
-```
-linkbot/
-├── app.py                      # Main Streamlit application entry point
-├── database/                   # SQLite database configuration and models
-├── pages/                      # Streamlit UI pages (Dashboard, Settings, Candidates, etc.)
-├── services/                   # Core business logic (Scoring, AI, CSV Handling, DB operations)
-├── utils/                      # Constants and helpers
-├── tests/                      # Pytest suite
-├── seed_demo_data.py           # Script to populate the DB with demo data
-├── requirements.txt            # Python dependencies
-└── README.md                   # Documentation
-```
+### Local Development
 
-## Running Locally
-
-1. **Clone the repository** (if applicable) and navigate to the folder:
-   ```bash
-   cd linkbot
-   ```
-
-2. **Create a virtual environment (Optional but recommended):**
+1. Clone the repository
+2. Create a virtual environment:
    ```bash
    python -m venv venv
-   # Windows
-   venv\Scripts\activate
-   # macOS/Linux
-   source venv/bin/activate
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
-
-3. **Install Dependencies:**
+3. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
-
-4. **Seed Demo Data (Optional):**
-   ```bash
-   python seed_demo_data.py
-   ```
-
-5. **Run the Application:**
+4. Run the app:
    ```bash
    streamlit run app.py
    ```
 
-## Optional AI Configuration
-To enable AI message generation, create a `.env` file from the `.env.example`:
-```
-AI_PROVIDER=openai  # or google-genai, ollama, etc.
-AI_API_KEY=your_api_key_here
-```
-*If left blank, the app gracefully degrades and remains 100% functional with deterministic scoring and template messages.*
+### Deployment (Streamlit Community Cloud)
 
-## Deployment
-You can deploy this application for free using **Streamlit Community Cloud**:
-1. Push this repository to GitHub.
+1. Push your code to a public GitHub repository.
 2. Go to [share.streamlit.io](https://share.streamlit.io).
-3. Connect your GitHub account and select this repository.
-4. Set the main file path as `app.py`.
-5. Click **Deploy!**
+3. Connect your GitHub account and select your repository.
+4. Set the main file path to `app.py`.
+5. (Optional) In the advanced settings, add your API keys to the Secrets:
+   ```toml
+   GEMINI_API_KEY = "your-google-gemini-key"
+   SERPER_API_KEY = "your-optional-serper-key"
+   ```
+6. Click Deploy!
 
-**Note on Data Persistence:** Streamlit Community Cloud environments are ephemeral. The local `networking.db` SQLite file might be reset on app reboots. Be sure to use the **Data Management** page to export your candidates to CSV regularly!
+## API Keys
+- **Google Gemini API**: Get a free key at [Google AI Studio](https://aistudio.google.com/). Required for profile analysis.
+- **Serper.dev API (Optional)**: Get 2,500 free queries at [Serper.dev](https://serper.dev/). Recommended for higher-quality search results.
 
-## Privacy and LinkedIn Limitations
-This app **does not require your LinkedIn credentials** and **does not automate any LinkedIn actions**. You remain entirely in control. Use the generated messages and profile links to manually perform outreach.
+## Limitations & Disclaimer
+- This app does **not** auto-connect or auto-follow on LinkedIn, as that violates their Terms of Service and can result in account bans. It provides you with direct links to manually review and connect.
+- DuckDuckGo search limits may apply if you run the app continuously in a loop.

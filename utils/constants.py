@@ -1,13 +1,28 @@
-ROLES_WEIGHTS = {
-    "Backend Engineer": 10,
-    "Frontend Engineer": 8,
-    "Full-stack Engineer": 10,
-    "Software Engineer": 10,
-    "DevOps Engineer": 9,
-    "Cloud Engineer": 9,
-    "Data Engineer": 8,
-    "AI/ML Engineer": 8,
-    "Recruiter": 7,
-    "Engineering Manager": 9,
-    "Founder": 7,
+# Categories for LinkedIn suggestions
+CATEGORY_SAME_ROLE = "Same Role"
+CATEGORY_INDUSTRY_PEER = "Industry Peer"
+CATEGORY_RECRUITER = "Recruiter / Talent"
+CATEGORY_THOUGHT_LEADER = "Thought Leader"
+CATEGORY_ALUMNI = "Alumni"
+CATEGORY_ADJACENT = "Adjacent Role"
+CATEGORY_UNKNOWN = "Unknown"
+
+# Search templates for DuckDuckGo
+SEARCH_TEMPLATES = {
+    CATEGORY_SAME_ROLE: 'site:linkedin.com/in/ "{title}" "{skill1}" "{skill2}"',
+    CATEGORY_INDUSTRY_PEER: 'site:linkedin.com/in/ "{industry}" "Senior" OR "Lead" "{location}"',
+    CATEGORY_RECRUITER: 'site:linkedin.com/in/ "Technical Recruiter" OR "Talent Acquisition" "{industry}" hiring',
+    CATEGORY_THOUGHT_LEADER: 'site:linkedin.com/in/ "{industry}" "Director" OR "VP" OR "Head of"',
+    CATEGORY_ALUMNI: 'site:linkedin.com/in/ "{education}" "{industry}"',
+    CATEGORY_ADJACENT: 'site:linkedin.com/in/ "{skill1}" "{skill2}" "{location}"'
 }
+
+# Fallback skills database (if LLM is unavailable)
+COMMON_SKILLS = [
+    "Python", "Java", "JavaScript", "TypeScript", "C++", "C#", "Ruby", "Go", "Rust",
+    "Machine Learning", "Deep Learning", "Data Science", "Data Engineering",
+    "React", "Angular", "Vue.js", "Node.js", "Django", "Flask", "FastAPI",
+    "AWS", "GCP", "Azure", "Docker", "Kubernetes", "CI/CD",
+    "SQL", "NoSQL", "MongoDB", "PostgreSQL", "MySQL",
+    "Project Management", "Agile", "Scrum", "Product Management"
+]
