@@ -1,6 +1,6 @@
 import json
 import streamlit as st
-import google.generativeai as genai
+from google import genai
 from .models import UserProfile, LinkedInSuggestion
 from utils.constants import CATEGORY_THOUGHT_LEADER, CATEGORY_ADJACENT
 
@@ -45,6 +45,13 @@ def calculate_fast_score(user_profile: UserProfile, suggestion: LinkedInSuggesti
     if user_profile.location and user_profile.location.lower() in text_to_check:
         score += 0.1
         
+    # 4. Seniority and Decision Maker Boost
+    title_lower = suggestion.title.lower()
+    if any(keyword in title_lower for keyword in ['director', 'vp', 'head', 'founder', 'partner', 'chief']):
+        score += 0.2
+    elif any(keyword in title_lower for keyword in ['manager', 'lead', 'principal']):
+        score += 0.1
+        
     return min(1.0, score)
 
 def assign_action(category: str) -> str:
@@ -58,8 +65,7 @@ def gemini_deep_ranking(user_profile: UserProfile, top_suggestions: list[LinkedI
     Mutates the suggestions in place.
     """
     try:
-        genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-3.6-flash')
+        client = genai.Client(api_key=api_key)
         
         user_context = f"User Profile: {user_profile.headline}, Skills: {', '.join(user_profile.skills)}, Experience: {user_profile.experience_years} years, Location: {user_profile.location}"
         
@@ -70,7 +76,9 @@ def gemini_deep_ranking(user_profile: UserProfile, top_suggestions: list[LinkedI
         candidates_text = "\n".join(candidates)
         
         prompt = f"""
-        You are a networking advisor. Evaluate how relevant these people are for the user to network with.
+        You are an elite Senior Psychographic Researcher and Strategic Communication Analyst. 
+        Your expertise combines organizational psychology, psycholinguistics, and professional networking strategy.
+        You analyze professional signals to infer deep insights into a person's psychological profile and communication preferences.
         
         {user_context}
         
@@ -81,12 +89,17 @@ def gemini_deep_ranking(user_profile: UserProfile, top_suggestions: list[LinkedI
         - "index": the index number from the list
         - "score": 0 to 100 representing relevance
         - "reason": a short 1-sentence reason why they should connect
-        - "connect_message": a personalized 2-3 sentence message the user can copy and paste to send a connection request to this person. It should mention why they are connecting based on mutual skills or industry.
+        - "psychological_profile": 1-2 sentences on how they likely think, lead, and work based on their title and snippet.
+        - "outreach_strategy": How the user should approach them (e.g., "Be direct and focus on ROI", "Focus on team culture").
+        - "connect_message": A highly personalized 2-3 sentence connection request tailored to their psychographic profile.
         
         Return ONLY a JSON array of objects.
         """
         
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-2.0-flash',
+            contents=prompt
+        )
         raw_json = response.text.strip()
         if raw_json.startswith("```json"):
             raw_json = raw_json[7:]
@@ -102,6 +115,8 @@ def gemini_deep_ranking(user_profile: UserProfile, top_suggestions: list[LinkedI
                 top_suggestions[idx].relevance_score = r.get("score", top_suggestions[idx].relevance_score)
                 top_suggestions[idx].reason = r.get("reason", "")
                 top_suggestions[idx].connect_message = r.get("connect_message", "")
+                top_suggestions[idx].psychological_profile = r.get("psychological_profile", "")
+                top_suggestions[idx].outreach_strategy = r.get("outreach_strategy", "")
                 
     except Exception as e:
         st.toast(f"Deep ranking failed (using fallback scores): {e}")

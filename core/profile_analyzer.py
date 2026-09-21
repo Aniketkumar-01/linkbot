@@ -1,22 +1,15 @@
 import json
 import streamlit as st
-import google.generativeai as genai
+from google import genai
 from pydantic import ValidationError
 from .models import UserProfile
 from utils.constants import COMMON_SKILLS
-
-def configure_gemini(api_key: str):
-    """Configures the Gemini API client."""
-    genai.configure(api_key=api_key)
 
 def analyze_profile_with_gemini(text: str, api_key: str) -> UserProfile:
     """
     Uses Gemini to extract structured data from raw resume/GitHub text.
     """
-    configure_gemini(api_key)
-    
-    # We use gemini-3.6-flash as it's fast and excellent at structured extraction
-    model = genai.GenerativeModel('gemini-3.6-flash')
+    client = genai.Client(api_key=api_key)
     
     prompt = f"""
     You are an expert career advisor and technical recruiter.
@@ -42,7 +35,10 @@ def analyze_profile_with_gemini(text: str, api_key: str) -> UserProfile:
     """
     
     try:
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model='gemini-2.0-flash',
+            contents=prompt
+        )
         # Clean potential markdown wrapping if the model ignores the instruction
         raw_json = response.text.strip()
         if raw_json.startswith("```json"):

@@ -1,5 +1,6 @@
 import streamlit as st
 import streamlit.components.v1 as components
+import json
 import pandas as pd
 from core.models import LinkedInSuggestion
 
@@ -59,7 +60,7 @@ def _render_data_table(suggestions: list[LinkedInSuggestion], key_prefix: str):
     st.markdown("Select a row to view connection details and message.")
     event = st.dataframe(
         df[["Name", "Relevance", "Category", "Job Title", "Action", "URL"]],
-        use_container_width=True,
+        width='stretch',
         hide_index=True,
         on_select="rerun",
         selection_mode="single-row",
@@ -99,6 +100,11 @@ def _render_data_table(suggestions: list[LinkedInSuggestion], key_prefix: str):
             
             # Display auto-generated connect message if available
             if original_sugg.connect_message:
+                if getattr(original_sugg, 'psychological_profile', None):
+                    with st.expander("🧠 Deep Psychographic Insights", expanded=True):
+                        st.markdown(f"**Psychological Profile:** {original_sugg.psychological_profile}")
+                        st.markdown(f"**Outreach Strategy:** {original_sugg.outreach_strategy}")
+                
                 st.markdown("#### 💬 Auto-Generated Connect Message")
                 st.code(original_sugg.connect_message, language="text")
                 st.caption("Click the copy icon in the top right of the box above, then click the Open Profile button to paste it on LinkedIn!")
@@ -122,7 +128,7 @@ def _render_export_button(suggestions: list[LinkedInSuggestion]):
 def _render_bulk_open_button(suggestions: list[LinkedInSuggestion]):
     """Renders a button that uses JS to open multiple tabs at once."""
     urls = [s.url for s in suggestions]
-    urls_json = pd.io.json.dumps(urls)
+    urls_json = json.dumps(urls)
     
     if st.button(f"🚀 Open Top {len(suggestions)} Profiles in Browser"):
         js_code = f"""

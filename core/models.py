@@ -24,3 +24,5 @@ class LinkedInSuggestion(BaseModel):
     reason: str = ""
     action: str = "Connect"
     connect_message: str = ""
+    psychological_profile: str = ""
+    outreach_strategy: str = ""
