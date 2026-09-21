@@ -36,7 +36,7 @@ def analyze_profile_with_gemini(text: str, api_key: str) -> UserProfile:
     
     try:
         response = client.models.generate_content(
-            model='gemini-2.0-flash',
+            model='gemini-3.6-flash',
             contents=prompt
         )
         # Clean potential markdown wrapping if the model ignores the instruction
