@@ -39,14 +39,14 @@ def analyze_profile_with_gemini(text: str, api_key: str) -> UserProfile:
             model='gemini-3.6-flash',
             contents=prompt
         )
-        # Clean potential markdown wrapping if the model ignores the instruction
-        raw_json = response.text.strip()
-        if raw_json.startswith("```json"):
-            raw_json = raw_json[7:]
-        if raw_json.endswith("```"):
-            raw_json = raw_json[:-3]
+        
+        import re
+        # Find the JSON object anywhere in the response text
+        match = re.search(r'\{.*\}', response.text, re.DOTALL)
+        if not match:
+            raise ValueError("No JSON object found in response")
             
-        data = json.loads(raw_json)
+        data = json.loads(match.group(0))
         return UserProfile(**data)
         
     except Exception as e:

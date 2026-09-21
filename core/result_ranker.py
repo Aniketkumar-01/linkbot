@@ -100,13 +100,14 @@ def gemini_deep_ranking(user_profile: UserProfile, top_suggestions: list[LinkedI
             model='gemini-3.6-flash',
             contents=prompt
         )
-        raw_json = response.text.strip()
-        if raw_json.startswith("```json"):
-            raw_json = raw_json[7:]
-        if raw_json.endswith("```"):
-            raw_json = raw_json[:-3]
+        
+        import re
+        # Find the JSON array anywhere in the response text
+        match = re.search(r'\[.*\]', response.text, re.DOTALL)
+        if not match:
+            raise ValueError("No JSON array found in response")
             
-        rankings = json.loads(raw_json)
+        rankings = json.loads(match.group(0))
         
         # Update suggestions
         for r in rankings:
