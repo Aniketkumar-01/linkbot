@@ -117,11 +117,21 @@ document.addEventListener('DOMContentLoaded', () => {
         // Render Profile
         const profilePreview = document.getElementById('profilePreview');
         
-        let skillsHtml = profile.skills.map(s => `<span class="skill-tag">${s}</span>`).join('');
+        let skillsHtml = (profile.skills && profile.skills.length) ? profile.skills.map(s => `<span class="skill-tag">${s}</span>`).join('') : '';
+        let educationHtml = (profile.education && profile.education.length) ? `<div class="card-section" style="margin-top: 1.5rem;"><h4><i class="fas fa-graduation-cap"></i> Education</h4><p style="color: var(--text-muted); font-size: 0.95rem;">${profile.education.join(', ')}</p></div>` : '';
+        let interestsHtml = (profile.interests && profile.interests.length) ? `<div class="card-section" style="margin-top: 1.5rem;"><h4><i class="fas fa-star"></i> Interests</h4><p style="color: var(--text-muted); font-size: 0.95rem;">${profile.interests.join(', ')}</p></div>` : '';
+        
+        let linksHtml = '';
+        if (profile.linkedin_url || profile.github_url) {
+            linksHtml = `<div class="profile-links" style="margin-top: 1.5rem; display: flex; gap: 1rem;">`;
+            if (profile.linkedin_url) linksHtml += `<a href="${profile.linkedin_url}" target="_blank" style="color: var(--primary);"><i class="fab fa-linkedin"></i> LinkedIn</a>`;
+            if (profile.github_url) linksHtml += `<a href="${profile.github_url}" target="_blank" style="color: var(--text-main);"><i class="fab fa-github"></i> GitHub</a>`;
+            linksHtml += `</div>`;
+        }
         
         profilePreview.innerHTML = `
             <h2>${profile.name || 'Analyzed Profile'}</h2>
-            <div class="headline">${profile.headline || profile.job_titles.join(' | ')}</div>
+            ${(profile.headline || (profile.job_titles && profile.job_titles.length)) ? `<div class="headline">${profile.headline || profile.job_titles.join(' | ')}</div>` : ''}
             
             <div class="profile-meta">
                 ${profile.location ? `<span><i class="fas fa-map-marker-alt"></i> ${profile.location}</span>` : ''}
@@ -129,9 +139,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${profile.industries && profile.industries.length ? `<span><i class="fas fa-industry"></i> ${profile.industries.join(', ')}</span>` : ''}
             </div>
             
-            <div class="skills-tags">
-                ${skillsHtml}
-            </div>
+            ${skillsHtml ? `<div class="skills-tags">${skillsHtml}</div>` : ''}
+            
+            ${educationHtml}
+            ${interestsHtml}
+            ${linksHtml}
         `;
 
         // Render Suggestions
@@ -144,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = 'suggestion-card';
             card.innerHTML = `
                 <div class="score-badge" style="color: ${scoreColor}; border-color: ${scoreColor}; background: ${scoreColor}15;">
-                    ${s.relevance_score}% Match
+                    Relevance Score: ${s.relevance_score}
                 </div>
                 <div class="card-category"><i class="fas fa-tag"></i> ${s.category}</div>
                 <h3 class="card-name">${s.name}</h3>

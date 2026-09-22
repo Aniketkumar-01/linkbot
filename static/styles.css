@@ -347,6 +347,10 @@ input[type="password"]:focus {
 }
 
 /* Results Section */
+.results-section {
+    margin-top: 3rem;
+}
+
 .profile-preview {
     background: linear-gradient(135deg, rgba(31,41,55,0.8), rgba(17,24,39,0.8));
     border: 1px solid var(--border-color);
