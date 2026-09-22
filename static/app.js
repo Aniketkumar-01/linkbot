@@ -159,47 +159,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Render Suggestions
         const grid = document.getElementById('suggestionsGrid');
-        grid.innerHTML = '';
+        
+        let tableHTML = `
+            <div style="overflow-x: auto;">
+                <table class="suggestions-table">
+                    <thead>
+                        <tr>
+                            <th>Score</th>
+                            <th>Candidate</th>
+                            <th>Category</th>
+                            <th>Reasoning</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
         
         suggestions.forEach(s => {
             const scoreColor = s.relevance_score >= 80 ? '#10B981' : (s.relevance_score >= 50 ? '#F59E0B' : '#EF4444');
-            const card = document.createElement('div');
-            card.className = 'suggestion-card';
-            card.innerHTML = `
-                <div class="score-badge" style="color: ${scoreColor}; border-color: ${scoreColor}; background: ${scoreColor}15;">
-                    Relevance Score: ${s.relevance_score}
-                </div>
-                <div class="card-category"><i class="fas fa-tag"></i> ${s.category}</div>
-                <h3 class="card-name">${s.name}</h3>
-                <div class="card-title">${s.title}</div>
-                
-                ${s.psychological_profile ? `
-                    <div class="card-section">
-                        <h4><i class="fas fa-brain"></i> Persona</h4>
-                        <p>${s.psychological_profile}</p>
-                    </div>
-                ` : ''}
-                
-                ${s.reason ? `
-                    <div class="card-section">
-                        <h4><i class="fas fa-lightbulb"></i> Why Connect</h4>
-                        <p>${s.reason}</p>
-                    </div>
-                ` : ''}
-                
-                <div class="card-actions">
-                    <a href="${s.url}" target="_blank" class="action-btn btn-primary">
-                        <i class="fab fa-linkedin"></i> View Profile
-                    </a>
-                    ${s.connect_message ? `
-                        <button class="action-btn btn-secondary" onclick="copyToClipboard('${s.connect_message.replace(/'/g, "\\'")}')">
-                            <i class="fas fa-copy"></i> Msg
-                        </button>
-                    ` : ''}
-                </div>
+            tableHTML += `
+                <tr>
+                    <td>
+                        <div class="score-badge-table" style="color: ${scoreColor}; border: 1px solid ${scoreColor}30; background: ${scoreColor}15;">
+                            ${s.relevance_score}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="candidate-info">
+                            <div class="candidate-name">${s.name}</div>
+                            <div class="candidate-title">${s.title}</div>
+                        </div>
+                    </td>
+                    <td><span class="category-badge-table">${s.category}</span></td>
+                    <td>
+                        <div class="reason-text">
+                            ${s.reason ? `<strong>Why Connect:</strong> ${s.reason}<br/>` : ''}
+                            ${s.psychological_profile ? `<strong>Persona:</strong> ${s.psychological_profile}` : ''}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="table-actions">
+                            <a href="${s.url}" target="_blank" class="action-btn-sm btn-primary" title="View Profile">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                            ${s.connect_message ? `
+                                <button class="action-btn-sm btn-secondary" onclick="copyToClipboard('${s.connect_message.replace(/'/g, "\\'")}')" title="Copy Message">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                </tr>
             `;
-            grid.appendChild(card);
         });
+        
+        tableHTML += `</tbody></table></div>`;
+        grid.innerHTML = tableHTML;
 
         resultsSection.style.display = 'block';
         resultsSection.scrollIntoView({ behavior: 'smooth' });

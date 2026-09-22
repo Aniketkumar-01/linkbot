@@ -443,122 +443,133 @@ input[type="password"]:focus {
     border-color: var(--primary);
 }
 
-.suggestions-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 1.5rem;
-}
-
-.suggestion-card {
+.suggestions-table-wrapper {
     background: var(--bg-card);
     backdrop-filter: blur(10px);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-lg);
-    padding: 1.5rem;
-    transition: all var(--transition-smooth);
-    display: flex;
-    flex-direction: column;
-    position: relative;
     overflow: hidden;
 }
 
-.suggestion-card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(255,255,255,0.2);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    background: var(--bg-card-hover);
+.suggestions-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
 }
 
-.score-badge {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    background: rgba(16, 185, 129, 0.1);
-    color: var(--accent);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-weight: 700;
+.suggestions-table th, .suggestions-table td {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.suggestions-table th {
+    background: rgba(0, 0, 0, 0.2);
     font-size: 0.85rem;
-}
-
-.card-category {
-    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: var(--primary);
-    margin-bottom: 0.5rem;
+    color: var(--text-muted);
     font-weight: 600;
 }
 
-.card-name {
-    font-size: 1.3rem;
-    margin-bottom: 0.25rem;
+.suggestions-table tr {
+    transition: background var(--transition-fast);
 }
 
-.card-title {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    margin-bottom: 1.5rem;
-    line-height: 1.4;
+.suggestions-table tr:hover {
+    background: rgba(255, 255, 255, 0.03);
 }
 
-.card-divider {
-    height: 1px;
-    background: var(--border-color);
-    margin: 1rem 0;
+.suggestions-table tr:last-child td {
+    border-bottom: none;
 }
 
-.card-section h4 {
-    font-size: 0.85rem;
-    color: var(--text-main);
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-}
-
-.card-section p {
+.score-badge-table {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 700;
     font-size: 0.9rem;
+    text-align: center;
+}
+
+.candidate-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.candidate-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 0.2rem;
+}
+
+.candidate-title {
+    font-size: 0.85rem;
     color: var(--text-muted);
-    margin-bottom: 1rem;
+    line-height: 1.3;
+}
+
+.category-badge-table {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--primary);
+    font-weight: 600;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    white-space: nowrap;
+}
+
+.reason-text {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    max-width: 400px;
     line-height: 1.5;
 }
 
-.card-actions {
-    margin-top: auto;
+.reason-text strong {
+    color: var(--text-main);
+    font-weight: 600;
+}
+
+.table-actions {
     display: flex;
     gap: 0.5rem;
 }
 
-.action-btn {
-    flex: 1;
-    text-align: center;
-    padding: 0.75rem;
+.action-btn-sm {
+    padding: 0.5rem 0.85rem;
     border-radius: var(--radius-sm);
-    font-weight: 600;
     font-size: 0.9rem;
-    transition: all var(--transition-fast);
+    cursor: pointer;
     text-decoration: none;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
 }
 
-.btn-primary {
+.action-btn-sm.btn-primary {
     background: var(--primary);
     color: white;
 }
 
-.btn-primary:hover {
+.action-btn-sm.btn-primary:hover {
     background: #2563EB;
-    color: white;
 }
 
-.btn-secondary {
+.action-btn-sm.btn-secondary {
     background: rgba(255,255,255,0.05);
     color: var(--text-main);
     border: 1px solid var(--border-color);
 }
 
-.btn-secondary:hover {
+.action-btn-sm.btn-secondary:hover {
     background: rgba(255,255,255,0.1);
     color: white;
 }
