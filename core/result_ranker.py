@@ -1,8 +1,28 @@
 import json
+import requests
+import concurrent.futures
 import streamlit as st
 from google import genai
 from .models import UserProfile, LinkedInSuggestion
 from utils.constants import CATEGORY_THOUGHT_LEADER, CATEGORY_ADJACENT
+
+def fetch_jina_content(url: str, max_length: int = 1500) -> str:
+    """
+    Fetches the public profile content using Jina Reader.
+    Truncates the response to avoid overflowing the prompt context.
+    """
+    try:
+        jina_url = f"https://r.jina.ai/{url}"
+        response = requests.get(jina_url, timeout=10)
+        if response.status_code == 200:
+            text = response.text
+            # Truncate text to avoid huge payloads
+            if len(text) > max_length:
+                return text[:max_length] + "..."
+            return text
+    except Exception as e:
+        pass
+    return ""
 
 def deduplicate_suggestions(suggestions: list[LinkedInSuggestion]) -> list[LinkedInSuggestion]:
     """
@@ -69,9 +89,21 @@ def gemini_deep_ranking(user_profile: UserProfile, top_suggestions: list[LinkedI
         
         user_context = f"User Profile: {user_profile.headline}, Skills: {', '.join(user_profile.skills)}, Experience: {user_profile.experience_years} years, Location: {user_profile.location}"
         
+        # Fetch deep profile content concurrently using Jina Reader
+        jina_contents = [""] * len(top_suggestions)
+        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as executor:
+            future_to_index = {executor.submit(fetch_jina_content, s.url): i for i, s in enumerate(top_suggestions)}
+            for future in concurrent.futures.as_completed(future_to_index):
+                i = future_to_index[future]
+                try:
+                    jina_contents[i] = future.result()
+                except Exception:
+                    jina_contents[i] = ""
+
         candidates = []
         for i, s in enumerate(top_suggestions):
-            candidates.append(f"[{i}] {s.name} - {s.title} - {s.snippet}")
+            profile_text = jina_contents[i] if jina_contents[i] else s.snippet
+            candidates.append(f"[{i}] {s.name} - {s.title} - URL: {s.url}\nExtracted Content/Snippet: {profile_text}\n")
             
         candidates_text = "\n".join(candidates)
         
