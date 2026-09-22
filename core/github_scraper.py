@@ -1,4 +1,4 @@
-import requests
+import httpx
 import re
 from urllib.parse import urlparse
 
@@ -10,9 +10,9 @@ def extract_github_username(url: str) -> str:
         return path_parts[0]
     return ""
 
-def scrape_github_profile(github_url: str) -> str:
+async def scrape_github_profile(github_url: str, client: httpx.AsyncClient) -> str:
     """
-    Fetches GitHub profile and top repositories using the GitHub REST API.
+    Fetches GitHub profile and top repositories using the GitHub REST API asynchronously.
     Returns a text summary that can be fed to Gemini for analysis.
     """
     username = extract_github_username(github_url)
@@ -25,8 +25,8 @@ def scrape_github_profile(github_url: str) -> str:
             "User-Agent": "LinkBot-Networking-App"
         }
         
-        # 1. Get user profile
-        user_resp = requests.get(f"https://api.github.com/users/{username}", headers=headers, timeout=10)
+        # 1. Get user profile using shared client
+        user_resp = await client.get(f"https://api.github.com/users/{username}", headers=headers)
         if user_resp.status_code != 200:
             return f"Could not access GitHub profile. Status: {user_resp.status_code}"
             
@@ -43,7 +43,7 @@ def scrape_github_profile(github_url: str) -> str:
             summary.append(f"Location: {user_data.get('location')}")
             
         # 2. Get repositories
-        repos_resp = requests.get(f"https://api.github.com/users/{username}/repos?sort=updated&per_page=10", headers=headers, timeout=10)
+        repos_resp = await client.get(f"https://api.github.com/users/{username}/repos?sort=updated&per_page=10", headers=headers)
         
         if repos_resp.status_code == 200:
             repos_data = repos_resp.json()
@@ -60,6 +60,8 @@ def scrape_github_profile(github_url: str) -> str:
                     summary.append(repo_info)
                     
         return "\n".join(summary)
-        
+            
+    except httpx.TimeoutException:
+        return "Error fetching GitHub profile: Timeout"
     except Exception as e:
         return f"Error fetching GitHub profile: {str(e)}"

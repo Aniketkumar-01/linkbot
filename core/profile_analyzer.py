@@ -1,12 +1,14 @@
 import json
+import re
 from google import genai
 from pydantic import ValidationError
+from starlette.concurrency import run_in_threadpool
 from .models import UserProfile
 from utils.constants import COMMON_SKILLS
 
-def analyze_profile_with_gemini(text: str, api_key: str) -> UserProfile:
+async def analyze_profile_with_gemini(text: str, api_key: str) -> UserProfile:
     """
-    Uses Gemini to extract structured data from raw resume/GitHub text.
+    Uses Gemini to extract structured data from raw resume/GitHub text asynchronously.
     """
     client = genai.Client(api_key=api_key)
     
@@ -34,18 +36,20 @@ def analyze_profile_with_gemini(text: str, api_key: str) -> UserProfile:
     """
     
     try:
-        response = client.models.generate_content(
+        # Offload synchronous SDK call to threadpool to avoid blocking event loop
+        response = await run_in_threadpool(
+            client.models.generate_content,
             model='gemini-3.6-flash',
             contents=prompt
         )
         
-        import re
-        # Find the JSON object anywhere in the response text
+        # Find the JSON object anywhere in the response text securely
         match = re.search(r'\{.*\}', response.text, re.DOTALL)
         if not match:
             raise ValueError("No JSON object found in response")
             
         data = json.loads(match.group(0))
+        # Validate through Pydantic
         return UserProfile(**data)
         
     except Exception as e:
@@ -57,12 +61,26 @@ def fallback_extraction(text: str) -> UserProfile:
     """
     Basic keyword-based extraction if Gemini is unavailable or fails.
     """
-    # Extremely basic fallback logic
     found_skills = [skill for skill in COMMON_SKILLS if skill.lower() in text.lower()]
     
+    # Try to extract a name if it's formatted as "Name: John Doe"
+    name = "User (Fallback Extraction)"
+    name_match = re.search(r'Name:\s*([A-Za-z\s]+)', text)
+    if name_match:
+        name = name_match.group(1).strip()
+        
+    # Heuristic for experience years: look for "X years"
+    exp_years = 0
+    exp_match = re.search(r'(\d+)\+?\s*years?', text.lower())
+    if exp_match:
+        try:
+            exp_years = int(exp_match.group(1))
+        except ValueError:
+            pass
+            
     return UserProfile(
-        name="User (Fallback Extraction)",
+        name=name,
         headline="Software Professional",
         skills=found_skills,
-        experience_years=0
+        experience_years=exp_years
     )

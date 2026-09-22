@@ -26,3 +26,17 @@ class LinkedInSuggestion(BaseModel):
     connect_message: str = ""
     psychological_profile: str = ""
     outreach_strategy: str = ""
+
+    @classmethod
+    def __get_validators__(cls):
+        yield cls.validate_to_json
+
+    @classmethod
+    def validate_to_json(cls, value):
+        return value
+
+    def __init__(self, **data):
+        super().__init__(**data)
+        # Enforce LinkedIn connection note limit
+        if len(self.connect_message) > 300:
+            self.connect_message = self.connect_message[:297] + "..."

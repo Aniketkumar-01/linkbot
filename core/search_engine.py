@@ -1,7 +1,8 @@
-import time
-import requests
+import asyncio
+import httpx
 import json
 from ddgs import DDGS
+from starlette.concurrency import run_in_threadpool
 from utils.constants import SEARCH_TEMPLATES, CATEGORY_SAME_ROLE, CATEGORY_INDUSTRY_PEER, CATEGORY_RECRUITER, CATEGORY_THOUGHT_LEADER, CATEGORY_ALUMNI, CATEGORY_ADJACENT
 from utils.helpers import clean_linkedin_url, extract_name_from_title, extract_title_from_snippet
 from .models import UserProfile, LinkedInSuggestion
@@ -57,41 +58,48 @@ def generate_search_queries(profile: UserProfile) -> dict[str, list[str]]:
         
     return queries
 
-def execute_search_ddg(query: str, category: str, max_results: int = 20) -> list[LinkedInSuggestion]:
+def _run_ddg_sync(query: str, max_results: int) -> list:
+    """Synchronous helper for DuckDuckGo search."""
+    results = []
+    with DDGS() as ddgs:
+        for r in ddgs.text(query, max_results=max_results):
+            results.append(r)
+    return results
+
+async def execute_search_ddg(query: str, category: str, max_results: int = 20) -> list[LinkedInSuggestion]:
     """
-    Executes a single search using DuckDuckGo.
+    Executes a single search using DuckDuckGo asynchronously.
     """
     suggestions = []
     try:
-        with DDGS() as ddgs:
-            results = ddgs.text(query, max_results=max_results)
-            for r in results:
-                href = r.get("href", "")
-                if "linkedin.com/in/" in href:
-                    title = r.get("title", "")
-                    snippet = r.get("body", "")
-                    
-                    name = extract_name_from_title(title)
-                    job_title = extract_title_from_snippet(snippet)
-                    clean_url = clean_linkedin_url(href)
-                    
-                    suggestions.append(LinkedInSuggestion(
-                        name=name,
-                        title=job_title,
-                        url=clean_url,
-                        snippet=snippet,
-                        category=category
-                    ))
+        results = await run_in_threadpool(_run_ddg_sync, query, max_results)
+        for r in results:
+            href = r.get("href", "")
+            if "linkedin.com/in/" in href:
+                title = r.get("title", "")
+                snippet = r.get("body", "")
+                
+                name = extract_name_from_title(title)
+                job_title = extract_title_from_snippet(snippet)
+                clean_url = clean_linkedin_url(href)
+                
+                suggestions.append(LinkedInSuggestion(
+                    name=name,
+                    title=job_title,
+                    url=clean_url,
+                    snippet=snippet,
+                    category=category
+                ))
         # Rate limiting protection
-        time.sleep(1.5)
+        await asyncio.sleep(1.5)
     except Exception as e:
         print(f"DuckDuckGo search error: {e}")
         
     return suggestions
 
-def execute_search_serper(query: str, category: str, api_key: str, max_results: int = 20) -> list[LinkedInSuggestion]:
+async def execute_search_serper(query: str, category: str, api_key: str, client: httpx.AsyncClient, max_results: int = 20) -> list[LinkedInSuggestion]:
     """
-    Executes a single search using Serper.dev API (if provided).
+    Executes a single search using Serper.dev API asynchronously.
     """
     suggestions = []
     try:
@@ -99,11 +107,12 @@ def execute_search_serper(query: str, category: str, api_key: str, max_results: 
             'X-API-KEY': api_key,
             'Content-Type': 'application/json'
         }
-        payload = json.dumps({
+        payload = {
             "q": query,
             "num": max_results
-        })
-        response = requests.post("https://google.serper.dev/search", headers=headers, data=payload)
+        }
+        
+        response = await client.post("https://google.serper.dev/search", headers=headers, json=payload)
         response.raise_for_status()
         
         data = response.json()
@@ -131,9 +140,9 @@ def execute_search_serper(query: str, category: str, api_key: str, max_results: 
         
     return suggestions
 
-def search_for_connections(profile: UserProfile, serper_api_key: str = "", progress_callback=None) -> list[LinkedInSuggestion]:
+async def search_for_connections(profile: UserProfile, client: httpx.AsyncClient, serper_api_key: str = "", progress_callback=None) -> list[LinkedInSuggestion]:
     """
-    Main orchestration function to run searches across multiple categories.
+    Main orchestration function to run searches across multiple categories asynchronously.
     """
     all_suggestions = []
     queries_dict = generate_search_queries(profile)
@@ -147,9 +156,9 @@ def search_for_connections(profile: UserProfile, serper_api_key: str = "", progr
                 progress_callback(queries_run / max(total_queries, 1), f"Searching for {category}...")
                 
             if serper_api_key:
-                results = execute_search_serper(query, category, serper_api_key)
+                results = await execute_search_serper(query, category, serper_api_key, client)
             else:
-                results = execute_search_ddg(query, category)
+                results = await execute_search_ddg(query, category)
                 
             all_suggestions.extend(results)
             queries_run += 1
