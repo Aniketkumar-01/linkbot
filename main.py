@@ -111,4 +111,4 @@ async def analyze_profile(
         raise
     except Exception as e:
         logger.exception("Internal Server Error during profile analysis pipeline.")
-        raise HTTPException(status_code=500, detail="An internal error occurred during analysis. Please try again.")
+        raise HTTPException(status_code=500, detail=f"An internal error occurred during analysis: {str(e)}")

@@ -91,10 +91,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: formData
             });
 
-            const data = await response.json();
+            let data;
+            const text = await response.text();
+            try {
+                data = JSON.parse(text);
+            } catch (e) {
+                // Not JSON response
+            }
 
             if (!response.ok) {
-                throw new Error(data.detail || "An error occurred during analysis.");
+                if (data && data.detail) {
+                    let errorMsg = typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail);
+                    throw new Error(errorMsg);
+                } else {
+                    throw new Error(`Error ${response.status}: ${text || response.statusText || "An error occurred during analysis."}`);
+                }
             }
 
             renderResults(data.profile, data.suggestions);
