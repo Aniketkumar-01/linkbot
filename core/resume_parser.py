@@ -15,8 +15,7 @@ def extract_text_from_pdf(pdf_file) -> str:
                     full_text += text + "\n\n"
     except Exception as e:
         # Fallback if there's an issue with pdfplumber
-        import streamlit as st
-        st.toast(f"Error extracting PDF: {e}")
+        print(f"Error extracting PDF: {e}")
         pass
     
     return full_text

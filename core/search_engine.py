@@ -1,7 +1,6 @@
 import time
 import requests
 import json
-import streamlit as st
 from ddgs import DDGS
 from utils.constants import SEARCH_TEMPLATES, CATEGORY_SAME_ROLE, CATEGORY_INDUSTRY_PEER, CATEGORY_RECRUITER, CATEGORY_THOUGHT_LEADER, CATEGORY_ALUMNI, CATEGORY_ADJACENT
 from utils.helpers import clean_linkedin_url, extract_name_from_title, extract_title_from_snippet
@@ -86,7 +85,7 @@ def execute_search_ddg(query: str, category: str, max_results: int = 20) -> list
         # Rate limiting protection
         time.sleep(1.5)
     except Exception as e:
-        st.toast(f"DuckDuckGo search error: {e}")
+        print(f"DuckDuckGo search error: {e}")
         
     return suggestions
 
@@ -128,7 +127,7 @@ def execute_search_serper(query: str, category: str, api_key: str, max_results: 
                     category=category
                 ))
     except Exception as e:
-        st.toast(f"Serper search error: {e}")
+        print(f"Serper search error: {e}")
         
     return suggestions
 

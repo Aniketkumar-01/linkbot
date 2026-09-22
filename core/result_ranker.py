@@ -1,7 +1,6 @@
 import json
 import requests
 import concurrent.futures
-import streamlit as st
 from google import genai
 from .models import UserProfile, LinkedInSuggestion
 from utils.constants import CATEGORY_THOUGHT_LEADER, CATEGORY_ADJACENT
@@ -152,7 +151,7 @@ def gemini_deep_ranking(user_profile: UserProfile, top_suggestions: list[LinkedI
                 top_suggestions[idx].outreach_strategy = r.get("outreach_strategy", "")
                 
     except Exception as e:
-        st.toast(f"Deep ranking failed (using fallback scores): {e}")
+        print(f"Deep ranking failed (using fallback scores): {e}")
 
 def rank_and_score_results(user_profile: UserProfile, suggestions: list[LinkedInSuggestion], gemini_api_key: str = "") -> list[LinkedInSuggestion]:
     """

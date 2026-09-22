@@ -1,5 +1,4 @@
 import json
-import streamlit as st
 from google import genai
 from pydantic import ValidationError
 from .models import UserProfile
@@ -50,7 +49,7 @@ def analyze_profile_with_gemini(text: str, api_key: str) -> UserProfile:
         return UserProfile(**data)
         
     except Exception as e:
-        st.toast(f"Gemini analysis failed, using fallback: {e}")
+        print(f"Gemini analysis failed, using fallback: {e}")
         # Fallback to basic extraction
         return fallback_extraction(text)
 
