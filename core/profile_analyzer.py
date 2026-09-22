@@ -1,6 +1,7 @@
 import json
 import re
 from google import genai
+from google.genai.errors import APIError
 from pydantic import ValidationError
 from starlette.concurrency import run_in_threadpool
 from .models import UserProfile
@@ -52,12 +53,12 @@ async def analyze_profile_with_gemini(text: str, api_key: str) -> UserProfile:
         # Validate through Pydantic
         return UserProfile(**data)
         
-    except ValueError as e:
-        print(f"Gemini analysis parsing failed, using fallback: {e}")
+    except APIError as e:
+        raise ValueError(f"Gemini API error: {str(e)}")
+    except Exception as e:
+        print(f"Gemini analysis parsing or internal error failed, using fallback: {e}")
         # Fallback to basic extraction
         return fallback_extraction(text)
-    except Exception as e:
-        raise ValueError(f"Gemini API error: {str(e)}")
 
 def fallback_extraction(text: str) -> UserProfile:
     """
