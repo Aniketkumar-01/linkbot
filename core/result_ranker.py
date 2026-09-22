@@ -145,7 +145,7 @@ async def rank_and_score_results(user_profile: UserProfile, suggestions: list[Li
         unique_suggestions = [s for s in unique_suggestions if user_profile.linkedin_url.strip('/') not in s.url]
         
     for s in unique_suggestions:
-        s.relevance_score = calculate_fast_score(user_profile, s)
+        s.relevance_score = round(calculate_fast_score(user_profile, s) * 100)
         s.action = assign_action(s.category)
         
     unique_suggestions.sort(key=lambda x: x.relevance_score, reverse=True)
@@ -153,12 +153,6 @@ async def rank_and_score_results(user_profile: UserProfile, suggestions: list[Li
     if gemini_api_key and unique_suggestions:
         top_n = unique_suggestions[:25]
         await gemini_deep_ranking(user_profile, top_n, client, gemini_api_key)
-        
-        for s in unique_suggestions[25:]:
-            s.relevance_score = round(s.relevance_score * 100)
-    else:
-        for s in unique_suggestions:
-            s.relevance_score = round(s.relevance_score * 100)
             
     unique_suggestions.sort(key=lambda x: x.relevance_score, reverse=True)
     return unique_suggestions
