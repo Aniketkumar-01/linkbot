@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Outfit:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface-tint":"#4cd7f6","on-tertiary":"#1000a9","surface-variant":"#303444","on-primary-fixed-variant":"#004e5c","inverse-surface":"#dee2f6","on-tertiary-fixed":"#07006c","inverse-primary":"#00687a","on-surface-variant":"#bcc9cd","primary-fixed":"#acedff","secondary-fixed":"#6ffbbe","surface":"#0e1321","outline":"#869397","secondary-fixed-dim":"#4edea3","on-primary-container":"#00424f","on-error":"#690005","on-error-container":"#ffdad6","on-surface":"#dee2f6","surface-container-highest":"#303444","on-secondary-container":"#00311f","on-secondary-fixed":"#002113","inverse-on-surface":"#2b303f","outline-variant":"#3d494c","primary-fixed-dim":"#4cd7f6","on-primary-fixed":"#001f26","on-secondary-fixed-variant":"#005236","on-background":"#dee2f6","tertiary-fixed":"#e1e0ff","on-secondary":"#003824","secondary":"#4edea3","on-tertiary-container":"#211cb4","tertiary-fixed-dim":"#c0c1ff","surface-bright":"#343948","tertiary-container":"#9a9dff","error":"#ffb4ab","on-tertiary-fixed-variant":"#2f2ebe","tertiary":"#c0c1ff","surface-container-lowest":"#090e1c","on-primary":"#003640","background":"#0e1321","primary":"#4cd7f6","error-container":"#93000a","surface-container":"#1a1f2e","surface-container-low":"#161b2a","secondary-container":"#00a572","surface-dim":"#0e1321","surface-container-high":"#252a39","primary-container":"#06b6d4"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"gutter-sm":"1rem","space-md":"1rem","gutter":"1.5rem","margin-sm":"1rem","space-sm":"0.5rem","space-lg":"1.5rem","margin":"2rem","space-xs":"0.25rem","space-xl":"2.5rem"},"fontFamily":{"body-lg":["Inter"],"headline-lg-mobile":["Outfit"],"body-sm":["Inter"],"headline-lg":["Outfit"],"label-lg":["Outfit"],"body-md":["Inter"],"headline-sm":["Outfit"],"label-sm":["Outfit"],"headline-xl":["Outfit"],"headline-md":["Outfit"],"headline-xl-mobile":["Outfit"],"label-md":["Outfit"]},"fontSize":{"body-lg":["16px",{"lineHeight":"26px","letterSpacing":"-0.005em","fontWeight":"400"}],"headline-lg-mobile":["26px",{"lineHeight":"34px","letterSpacing":"-0.02em","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"18px","letterSpacing":"0.005em","fontWeight":"400"}],"headline-lg":["36px",{"lineHeight":"44px","letterSpacing":"-0.025em","fontWeight":"600"}],"label-lg":["14px",{"lineHeight":"20px","letterSpacing":"0.02em","fontWeight":"600"}],"body-md":["14px",{"lineHeight":"22px","letterSpacing":"0em","fontWeight":"400"}],"headline-sm":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.08em","fontWeight":"700"}],"headline-xl":["48px",{"lineHeight":"56px","letterSpacing":"-0.03em","fontWeight":"700"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"600"}],"headline-xl-mobile":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"700"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.04em","fontWeight":"600"}]}}}}</script></head><body class="bg-background font-body-md text-on-surface min-h-screen relative overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container"><div class="fixed inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/10 via-surface-container-lowest to-background z-0"></div><header class="fixed top-0 left-0 right-0 h-16 z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.25)]"><div class="h-16 w-full px-gutter flex items-center justify-between gap-space-md"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-sm"><img alt="Linkbot Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VhTf4QL2Nr04NEZcvGyQ9fv5-Lz_thxeGmL8uv-jMdX4kyDJyZnT3wlOxMr9OwScR_OPL5vLCF1xgOuDG99DafKRLzPn4-8OtYlaQzQ65SD-AiAymGjLKVbt0ZD9pjsUHE6HWJHYTMmmfv78cLevtbqWg6uomavAjsmMS1_XDffpsBCKh7cKsN-iAWUy7kQw8N83TvjtBXH7o2wHAxWardKZ4F19fcEH8d5nQQU48tfFplu0OYNNufUcWo"/><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Linkbot</span></div><div class="hidden md:flex items-center gap-space-xs bg-surface-container-high px-space-md py-1 rounded-full shadow-[inset_0_0_8px_rgba(0,0,0,0.3)]"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">AI Engine Active</span><span class="font-label-sm text-label-sm text-on-surface-variant">·</span><span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Gemini 1.5 Pro</span></div></div><div class="flex items-center gap-space-md"><a class="flex items-center gap-space-xs px-space-md py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface transition-colors shadow-sm" data-path="engine-settings" href="#"><span class="material-symbols-outlined text-[18px]">vpn_key</span><span class="font-label-md text-label-md hidden sm:inline">API Keys &amp; Engine Settings</span></a><div class="relative flex items-center pl-space-xs"><div class="relative flex items-center justify-center"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary/40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYYhxUaoI_Okt-zEOzdcyWOTinJnVQk2xfeXrZ6jyNizvjo_3CHtYXzUds42kXSNGTjwy7Xe3lNQcArL4ot5E0R6fGeBpbHPShVjlRUFytJcVCELps-SGu5lz2sv4S5dP9KFFYqmj_Ba7VaiHcXKlLtTLXky0noj-0_3PuRLLGeLd9wyRV02Xt1CxcA-KBv3vPRoNT3MP1KmOOG2ws8A_0cmoTOjtUyOs_ciB4fQQ-dqNcwZoAbP65jA"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-secondary ring-2 ring-surface"></span></div></div></div></div></header><aside class="fixed left-0 top-16 bottom-0 w-64 bg-surface-container-lowest/80 backdrop-blur-xl z-40 flex flex-col justify-between p-space-md shadow-[1px_0_12px_rgba(0,0,0,0.2)]"><div class="flex flex-col gap-space-md"><div class="px-space-sm pt-space-xs"><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Navigation</span></div><nav class="flex flex-col gap-space-xs" data-active-classes="bg-primary-container text-on-primary-container font-bold rounded-lg shadow-[0_0_16px_rgba(6,182,212,0.3)]"><a aria-current="page" class="flex items-center gap-space-md px-space-md py-2.5 transition-all bg-primary-container text-on-primary-container font-bold rounded-lg shadow-[0_0_16px_rgba(6,182,212,0.3)]" data-path="network-radar" href="#"><span class="material-symbols-outlined text-[20px]">radar</span><span class="font-label-lg text-label-lg">Network Radar</span></a><a class="flex items-center gap-space-md px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="match-pipeline" href="#"><span class="material-symbols-outlined text-[20px]">hub</span><span class="font-label-lg text-label-lg">Match Pipeline</span></a><a class="flex items-center gap-space-md px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="conversational-ai" href="#"><span class="material-symbols-outlined text-[20px]">chat_bubble</span><span class="font-label-lg text-label-lg">Conversational AI</span></a><a class="flex items-center gap-space-md px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="automated-outreach" href="#"><span class="material-symbols-outlined text-[20px]">send</span><span class="font-label-lg text-label-lg">Outreach Agents</span></a><a class="flex items-center gap-space-md px-space-md py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="affinity-analytics" href="#"><span class="material-symbols-outlined text-[20px]">monitoring</span><span class="font-label-lg text-label-lg">Affinity Insights</span></a></nav></div><div class="flex flex-col gap-space-sm p-space-sm bg-surface-container-low rounded-xl"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">Token Quota</span><span class="font-label-sm text-label-sm text-primary">84%</span></div><div class="w-full h-1.5 bg-surface-variant rounded-full overflow-hidden"><div class="h-full bg-gradient-to-r from-primary to-secondary w-[84%] rounded-full"></div></div><div class="flex items-center justify-between text-on-surface-variant pt-space-xs"><span class="font-body-sm text-body-sm">Gemini Engine</span><span class="font-body-sm text-body-sm text-secondary flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Synched</span></div></div></aside><div class="pl-64 relative z-10"><main class="w-full pt-16 bg-transparent min-h-screen px-gutter py-space-lg"><div class="flex flex-col w-full">
+<!-- Radial Atmosphere Accent Underglows -->
+<div class="relative w-full overflow-hidden">
+<div class="absolute -top-32 left-1/4 w-[600px] h-[350px] bg-primary/10 rounded-full blur-[120px] pointer-events-none"></div>
+<div class="absolute top-10 right-10 w-[450px] h-[280px] bg-secondary/10 rounded-full blur-[100px] pointer-events-none"></div>
+<!-- Hero Header Banner -->
+<div class="flex flex-col items-center text-center max-w-4xl mx-auto px-space-sm pt-space-xs pb-space-lg">
+<div class="inline-flex items-center gap-space-xs px-space-md py-1 rounded-full bg-surface-container-high/70 backdrop-blur-md shadow-sm mb-space-md">
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest font-semibold">Gemini 1.5 Pro Latent Reasoning</span>
+<span class="text-on-surface-variant text-label-sm">•</span>
+<span class="font-label-sm text-label-sm text-secondary">Serper Live Web Radar</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl tracking-tight text-on-surface mb-space-sm">
+        AI-Powered <span class="bg-gradient-to-r from-secondary via-primary to-tertiary-container bg-clip-text text-transparent">LinkedIn Network Expansion</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+        Upload your profile data to discover, score, and initiate high-affinity LinkedIn connections curated by Gemini LLMs and autonomous semantic crawl pipelines.
+      </p>
+<!-- Quick Action Controls & Floating Engine Pill -->
+<div class="flex flex-wrap items-center justify-center gap-space-md mt-space-md">
+<button class="flex items-center gap-space-xs px-space-md py-2 rounded-full bg-surface-container/90 hover:bg-surface-container-high transition-all shadow-md hover:shadow-primary/10 text-on-surface" id="toggle-engine-btn">
+<span class="material-symbols-outlined text-[18px] text-primary">tune</span>
+<span class="font-label-md text-label-md">Engine Telemetry &amp; Keys</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">142ms</span>
+</button>
+<div class="flex items-center gap-space-xs text-on-surface-variant font-label-sm text-label-sm px-space-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary">security</span>
+<span>Zero-Retention Key Sandbox</span>
+</div>
+</div>
+</div>
+<!-- API Config Panel (Expandable / Toggleable) -->
+<div class="hidden max-w-4xl mx-auto mb-space-xl transition-all duration-300" id="engine-config-drawer">
+<div class="relative bg-surface-container/90 backdrop-blur-xl rounded-xl p-space-lg shadow-xl shadow-surface-container-lowest/80 overflow-hidden">
+<div class="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-secondary via-primary to-tertiary"></div>
+<div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md pb-space-md border-b border-surface-variant/40">
+<div class="flex items-center gap-space-sm">
+<div class="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">memory</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-sm text-headline-sm text-on-surface">LLM Engine &amp; Web Serp Topology</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary/15 font-label-sm text-label-sm text-secondary font-semibold">Active Node</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Configure enterprise credentials for autonomous profile analysis and entity verification.</p>
+</div>
+</div>
+<button class="p-1 rounded-lg hover:bg-surface-variant text-on-surface-variant hover:text-on-surface" id="close-engine-btn">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-lg pt-space-md">
+<!-- Gemini Key -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface flex items-center gap-space-xs">
+<span>Gemini API Key</span>
+<span class="px-1.5 py-0.2 rounded bg-primary/20 text-primary font-label-sm text-label-sm">Required</span>
+</label>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Models: 1.5 Pro / Flash</span>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[18px]">key</span>
+<input class="w-full bg-surface-container-lowest/80 text-on-surface font-body-md text-body-md pl-10 pr-10 py-2.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary shadow-inner" placeholder="AIzaSy...••••" type="password" value="AIzaSyDG99DafKRLzPn4-8OtYlaQzQ65SD-AiAy"/>
+<button class="absolute right-3 text-on-surface-variant hover:text-on-surface" title="Toggle visibility">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</div>
+<!-- Serper Key -->
+<div class="flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-label-md text-label-md text-on-surface flex items-center gap-space-xs">
+<span>Serper API Key</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-variant text-on-surface-variant font-label-sm text-label-sm">Optional</span>
+</label>
+<span class="font-body-sm text-body-sm text-secondary flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Ping: 142ms
+              </span>
+</div>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant text-[18px]">travel_explore</span>
+<input class="w-full bg-surface-container-lowest/80 text-on-surface font-body-md text-body-md pl-10 pr-10 py-2.5 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary shadow-inner" placeholder="serper_live_..." type="password" value="serper_live_93810ff827aa0c1894b"/>
+<button class="absolute right-3 text-on-surface-variant hover:text-on-surface">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between mt-space-lg pt-space-md border-t border-surface-variant/40">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Validated handshake • High throughput rate limit (1,000 req/min)</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="px-space-md py-2 rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface font-label-md text-label-md transition-all">Test Probe</button>
+<button class="px-space-md py-2 rounded-lg bg-primary hover:bg-primary-fixed-dim text-on-primary font-label-md text-label-md transition-all shadow-md shadow-primary/20" id="save-keys-btn">Save Configuration</button>
+</div>
+</div>
+</div>
+</div>
+<!-- MAIN INPUT HOOK SECTION -->
+<div class="max-w-4xl mx-auto mb-space-xl">
+<div class="bg-surface-container/60 backdrop-blur-2xl rounded-2xl p-space-lg shadow-2xl relative overflow-hidden">
+<!-- Accent light ray -->
+<div class="absolute -top-24 -right-24 w-72 h-72 bg-gradient-to-br from-primary/20 via-secondary/10 to-transparent rounded-full blur-3xl pointer-events-none"></div>
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md pb-space-md mb-space-md border-b border-surface-variant/30">
+<div>
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[22px]">hub</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Input Ingestion Engine</h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Select a source vector to generate the high-dimensional professional profile.</p>
+</div>
+<!-- Ingestion Tab Switches -->
+<div class="flex items-center p-1 bg-surface-container-lowest/80 rounded-xl">
+<button class="tab-button flex items-center gap-1.5 px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary-container font-label-md text-label-md font-semibold transition-all shadow-md" id="tab-btn-pdf" onclick="switchTab('pdf')">
+<span class="material-symbols-outlined text-[18px]">picture_as_pdf</span>
+<span>PDF Resume</span>
+</button>
+<button class="tab-button flex items-center gap-1.5 px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all" id="tab-btn-github" onclick="switchTab('github')">
+<span class="material-symbols-outlined text-[18px]">code</span>
+<span>GitHub</span>
+</button>
+<button class="tab-button flex items-center gap-1.5 px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all" id="tab-btn-linkedin" onclick="switchTab('linkedin')">
+<span class="material-symbols-outlined text-[18px]">share</span>
+<span>LinkedIn</span>
+</button>
+</div>
+</div>
+<!-- TAB 1 CONTENT: PDF RESUME -->
+<div class="flex flex-col gap-space-md" id="tab-content-pdf">
+<div class="group relative flex flex-col items-center justify-center p-space-xl rounded-xl bg-surface-container-lowest/50 hover:bg-surface-container-lowest/80 transition-all duration-300 cursor-pointer text-center">
+<div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-primary/20 to-secondary/20 flex items-center justify-center text-primary mb-space-sm group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-[32px] animate-bounce">cloud_upload</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface mb-1">Drop your CV / Resume (PDF, max 10MB)</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-md">Our layout-aware parser extracts engineering projects, patents, distributed stacks, and seniority signals.</p>
+<div class="mt-space-md flex flex-wrap items-center justify-center gap-space-sm">
+<!-- File Preview Pill -->
+<div class="flex items-center gap-space-sm bg-surface-container-high px-space-md py-2 rounded-full text-on-surface shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-secondary">verified</span>
+<span class="font-label-md text-label-md font-medium">Alex_Chen_Staff_Engineer_CV.pdf (2.4 MB)</span>
+<span class="font-label-sm text-label-sm text-secondary bg-secondary/10 px-2 py-0.5 rounded-full font-semibold">Parsed Successfully</span>
+</div>
+<button class="flex items-center gap-1 px-space-sm py-1.5 rounded-full bg-surface-variant/80 hover:bg-surface-variant text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors">
+<span class="material-symbols-outlined text-[16px]">replay</span>
+<span>Re-upload</span>
+</button>
+</div>
+</div>
+</div>
+<!-- TAB 2 CONTENT: GITHUB -->
+<div class="hidden flex-col gap-space-md" id="tab-content-github">
+<div class="p-space-lg rounded-xl bg-surface-container-lowest/60 flex flex-col gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-md text-label-md text-on-surface">GitHub Profile Handle or URL</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant text-[20px]">terminal</span>
+<input class="w-full bg-surface-container-high/60 text-on-surface font-body-md text-body-md pl-11 pr-space-md py-3 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary" placeholder="https://github.com/username" type="text" value="https://github.com/alexchen-ai"/>
+</div>
+</div>
+<div class="flex items-center gap-space-sm p-space-sm rounded-lg bg-surface-container/60">
+<input checked="" class="w-4 h-4 rounded accent-primary bg-surface-container-highest cursor-pointer" id="deepscan" type="checkbox"/>
+<label class="font-body-sm text-body-sm text-on-surface cursor-pointer select-none" for="deepscan">
+                Deep-scan starred repositories, commit telemetry, and AST package manifests for exact architecture affinity
+              </label>
+</div>
+</div>
+</div>
+<!-- TAB 3 CONTENT: LINKEDIN -->
+<div class="hidden flex-col gap-space-md" id="tab-content-linkedin">
+<div class="p-space-lg rounded-xl bg-surface-container-lowest/60 flex flex-col gap-space-md">
+<div class="flex flex-col gap-space-xs">
+<label class="font-label-md text-label-md text-on-surface">LinkedIn Profile Public URL</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant text-[20px]">link</span>
+<input class="w-full bg-surface-container-high/60 text-on-surface font-body-md text-body-md pl-11 pr-space-md py-3 rounded-xl focus:outline-none focus:ring-1 focus:ring-primary" placeholder="https://linkedin.com/in/username" type="text" value="https://linkedin.com/in/alex-chen-ml-systems"/>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Linkbot crawls visible recommendations, activity posts, and career milestones through clean browser session simulation.
+            </p>
+</div>
+</div>
+<!-- Scan CTA and Pipeline State Indicator -->
+<div class="mt-space-lg flex flex-col items-center gap-space-md">
+<button class="w-full sm:w-auto min-w-[320px] flex items-center justify-center gap-space-sm px-space-xl py-3.5 rounded-full bg-gradient-to-r from-secondary-container via-primary-container to-tertiary-container hover:brightness-110 active:scale-98 transition-all duration-200 text-on-primary-container font-headline-sm text-headline-sm font-bold shadow-[0_0_30px_rgba(6,182,212,0.35)] cursor-pointer" id="analyze-action-btn" onclick="triggerAnalysisPipeline()">
+<span class="material-symbols-outlined text-[24px]">auto_awesome</span>
+<span>Analyze Profile &amp; Find Connections</span>
+</button>
+<!-- AI Pipeline Visual Tracker (Hidden by default, shown during or post execution) -->
+<div class="w-full mt-space-sm bg-surface-container-lowest/90 p-space-md rounded-xl transition-all" id="pipeline-tracker">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-wider font-semibold">Gemini Multi-Stage Pipeline Active</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-bold" id="pipeline-percentage">Step 4/4 Complete • 100%</span>
+</div>
+<!-- Flow Bar -->
+<div class="grid grid-cols-1 sm:grid-cols-4 gap-space-xs text-left">
+<div class="p-space-xs rounded bg-surface-container-high/80 border-l-2 border-secondary flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary font-bold">1. Extracting Entities</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">AST + Chronology mapped</span>
+</div>
+<div class="p-space-xs rounded bg-surface-container-high/80 border-l-2 border-secondary flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary font-bold">2. Synthesizing Vector</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">1,536-dim embedding locked</span>
+</div>
+<div class="p-space-xs rounded bg-surface-container-high/80 border-l-2 border-secondary flex flex-col">
+<span class="font-label-sm text-label-sm text-secondary font-bold">3. Serper Graph Crawl</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">324 nodes scanned</span>
+</div>
+<div class="p-space-xs rounded bg-surface-container-high/80 border-l-2 border-primary flex flex-col">
+<span class="font-label-sm text-label-sm text-primary font-bold">4. Ranking Affinity</span>
+<span class="font-body-sm text-[11px] text-on-surface-variant">18 candidates calibrated</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RESULTS SECTION -->
+<div class="max-w-6xl mx-auto flex flex-col gap-space-xl">
+<!-- PART A: THE USER PROFILE SNAPSHOT CARD -->
+<div class="relative bg-surface-container/70 backdrop-blur-xl rounded-2xl p-space-lg shadow-xl overflow-hidden">
+<!-- Highlight top subtle border strip -->
+<div class="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-secondary via-primary to-primary-container"></div>
+<div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-space-lg">
+<!-- Left: Identity & Core Metadata -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center gap-space-lg">
+<div class="relative">
+<img alt="Alex Chen Portrait" class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover ring-2 ring-primary/40 shadow-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYYhxUaoI_Okt-zEOzdcyWOTinJnVQk2xfeXrZ6jyNizvjo_3CHtYXzUds42kXSNGTjwy7Xe3lNQcArL4ot5E0R6fGeBpbHPShVjlRUFytJcVCELps-SGu5lz2sv4S5dP9KFFYqmj_Ba7VaiHcXKlLtTLXky0noj-0_3PuRLLGeLd9wyRV02Xt1CxcA-KBv3vPRoNT3MP1KmOOG2ws8A_0cmoTOjtUyOs_ciB4fQQ-dqNcwZoAbP65jA"/>
+<span class="absolute -bottom-1 -right-1 bg-secondary text-on-secondary px-2 py-0.5 rounded-full font-label-sm text-label-sm font-bold shadow-md flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[12px]">bolt</span> Staff
+              </span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<div class="flex flex-wrap items-center gap-space-xs">
+<h3 class="font-headline-md text-headline-md text-on-surface font-bold">Alex Chen</h3>
+<span class="font-label-sm text-label-sm px-2.5 py-0.5 rounded-full bg-primary/10 text-primary font-semibold">Active Vector Identity</span>
+</div>
+<p class="font-headline-sm text-headline-sm text-primary-fixed-dim font-medium">
+                Staff AI/ML Systems Engineer &amp; Distributed Architect
+              </p>
+<div class="flex flex-wrap items-center gap-y-1 gap-x-space-md text-on-surface-variant font-body-sm text-body-sm mt-0.5">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">location_on</span>
+                  San Francisco Bay Area, CA
+                </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-secondary">work_history</span>
+                  8.5 Years Experience
+                </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-tertiary">school</span>
+                  M.S. Stanford University
+                </span>
+</div>
+</div>
+</div>
+<!-- Right: External Profiles & Export -->
+<div class="flex flex-row lg:flex-col items-center lg:items-end justify-between w-full lg:w-auto gap-space-sm pt-space-sm lg:pt-0 border-t lg:border-t-0 border-surface-variant/40">
+<div class="flex items-center gap-space-xs">
+<a class="w-9 h-9 rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface flex items-center justify-center transition-colors shadow-sm" href="https://linkedin.com" target="_blank" title="LinkedIn">
+<span class="font-label-md text-label-md font-bold">in</span>
+</a>
+<a class="w-9 h-9 rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface flex items-center justify-center transition-colors shadow-sm" href="https://github.com" target="_blank" title="GitHub">
+<span class="material-symbols-outlined text-[18px]">terminal</span>
+</a>
+<a class="w-9 h-9 rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface flex items-center justify-center transition-colors shadow-sm" href="https://x.com" target="_blank" title="X (Twitter)">
+<span class="font-label-md text-label-md font-bold">𝕏</span>
+</a>
+<a class="w-9 h-9 rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface flex items-center justify-center transition-colors shadow-sm" href="#" title="Personal Portfolio">
+<span class="material-symbols-outlined text-[18px]">language</span>
+</a>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>Vector Cache Fresh • 1.2 hrs ago</span>
+</div>
+</div>
+</div>
+<!-- Bottom Partition: Skills & Affinity Themes -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-md mt-space-lg pt-space-md border-t border-surface-variant/30">
+<!-- Key Skills Pill Array -->
+<div class="md:col-span-8 flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Synthesized Skill Core</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2.5 py-1 rounded-md bg-surface-container-high text-primary font-label-sm text-label-sm font-medium shadow-sm">LLM Orchestration</span>
+<span class="px-2.5 py-1 rounded-md bg-surface-container-high text-secondary font-label-sm text-label-sm font-medium shadow-sm">vLLM &amp; TensorRT</span>
+<span class="px-2.5 py-1 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm font-medium shadow-sm">PyTorch</span>
+<span class="px-2.5 py-1 rounded-md bg-surface-container-high text-primary-fixed font-label-sm text-label-sm font-medium shadow-sm">Rust Distributed Systems</span>
+<span class="px-2.5 py-1 rounded-md bg-surface-container-high text-on-surface font-label-sm text-label-sm font-medium shadow-sm">Kubernetes &amp; Slurm</span>
+<span class="px-2.5 py-1 rounded-md bg-surface-container-high text-secondary-fixed font-label-sm text-label-sm font-medium shadow-sm">Vector Databases (Qdrant/Milvus)</span>
+<span class="px-2.5 py-1 rounded-md bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm font-medium shadow-sm">High-Throughput Serving</span>
+</div>
+</div>
+<!-- Secondary Interests -->
+<div class="md:col-span-4 flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Target Network Anchors</span>
+<p class="font-body-sm text-body-sm text-on-surface">
+              AI Agent Frameworks • Open-Source LLM Foundries • Early-Stage Angel Infrastructure Syndicate
+            </p>
+</div>
+</div>
+</div>
+<!-- PART B: CONNECTION SUGGESTIONS (CORE CANDIDATE RADAR) -->
+<div class="flex flex-col gap-space-md">
+<!-- Controls & Filter Toolbar -->
+<div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md bg-surface-container-low/70 p-space-md rounded-2xl backdrop-blur-md">
+<!-- Category Tabs -->
+<div class="flex items-center flex-wrap gap-space-xs">
+<button class="filter-tab active-filter px-space-md py-1.5 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md font-semibold transition-all" id="filter-all" onclick="filterCandidates('all')">
+              All Candidates (18)
+            </button>
+<button class="filter-tab px-space-md py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all" id="filter-connect" onclick="filterCandidates('connect')">
+              Recommended to Connect (12)
+            </button>
+<button class="filter-tab px-space-md py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all" id="filter-follow" onclick="filterCandidates('follow')">
+              Recommended to Follow (6)
+            </button>
+</div>
+<!-- Search & Affinity Sorter -->
+<div class="flex items-center gap-space-sm w-full md:w-auto">
+<div class="relative flex-1 md:w-64">
+<span class="material-symbols-outlined absolute left-3 top-2 text-on-surface-variant text-[18px]">search</span>
+<input class="w-full bg-surface-container-lowest/90 text-on-surface font-body-sm text-body-sm pl-9 pr-space-md py-1.5 rounded-full focus:outline-none focus:ring-1 focus:ring-primary shadow-inner" id="candidate-search" oninput="handleCandidateSearch(this.value)" placeholder="Search persona or company..." type="text"/>
+</div>
+<div class="flex items-center gap-1 bg-surface-container px-space-sm py-1.5 rounded-full font-label-sm text-label-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-primary">sort</span>
+<span>Affinity Score</span>
+</div>
+</div>
+</div>
+<!-- 6 High-Fidelity Candidate Cards Bento Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg" id="candidate-grid">
+<!-- Candidate 1: Dr. Elena Rostova -->
+<div class="candidate-card group relative flex flex-col justify-between bg-surface-container/70 hover:bg-surface-container-high/80 backdrop-blur-xl rounded-2xl p-space-lg shadow-lg hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300" data-name="Elena Rostova Synthesia Labs" data-type="connect">
+<div class="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-tertiary-container via-primary to-secondary opacity-80"></div>
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-space-md">
+<!-- Avatar & Status -->
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-xl bg-surface-variant flex items-center justify-center text-primary font-headline-sm font-bold shadow-inner ring-1 ring-white/10">
+                    ER
+                  </div>
+<span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-secondary rounded-full border-2 border-surface" title="Active this week"></span>
+</div>
+<!-- Badges & Action Signal -->
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-tertiary/15 text-tertiary-fixed font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">psychology</span>
+<span>Thought Leader</span>
+</div>
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary/15 text-secondary font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[13px]">hub</span>
+<span>Connect • 98%</span>
+</div>
+</div>
+</div>
+<!-- Persona Meta -->
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold group-hover:text-primary transition-colors">
+                Dr. Elena Rostova
+              </h4>
+<p class="font-body-md text-body-md text-primary-fixed-dim font-medium mb-1">
+                VP of AI Research at Synthesia Labs
+              </p>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-sm text-body-sm mb-space-md">
+<span class="material-symbols-outlined text-[15px] text-outline">location_on</span>
+<span>Palo Alto, CA • 500+ Connections</span>
+</div>
+<!-- Match Rationale Box -->
+<div class="p-space-sm rounded-xl bg-surface-container-lowest/80 mb-space-md">
+<div class="flex items-center gap-1 text-secondary font-label-sm text-label-sm font-semibold mb-1">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span>
+<span>AI Match Rationale</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Published recent papers on speculative decoding; direct shared Stanford CS alumni network and TensorRT interest graph.
+                </p>
+</div>
+</div>
+<!-- Footer Action -->
+<div class="pt-space-sm border-t border-surface-variant/30 flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Stanford Alumni Node</span>
+<a class="flex items-center gap-1 px-space-md py-1.5 rounded-lg bg-surface-container-highest hover:bg-primary hover:text-on-primary text-on-surface font-label-md text-label-md font-semibold transition-all" href="https://linkedin.com" target="_blank">
+<span>View LinkedIn</span>
+<span class="material-symbols-outlined text-[16px]">arrow_outward</span>
+</a>
+</div>
+</div>
+<!-- Candidate 2: Marcus Vance -->
+<div class="candidate-card group relative flex flex-col justify-between bg-surface-container/70 hover:bg-surface-container-high/80 backdrop-blur-xl rounded-2xl p-space-lg shadow-lg hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300" data-name="Marcus Vance HyperScale Vector" data-type="connect">
+<div class="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-primary via-secondary to-primary-container opacity-80"></div>
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-space-md">
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-xl bg-surface-variant flex items-center justify-center text-secondary font-headline-sm font-bold shadow-inner ring-1 ring-white/10">
+                    MV
+                  </div>
+<span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-secondary rounded-full border-2 border-surface"></span>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-primary/15 text-primary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">terminal</span>
+<span>Peer Architect</span>
+</div>
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary/15 text-secondary font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[13px]">hub</span>
+<span>Connect • 95%</span>
+</div>
+</div>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold group-hover:text-primary transition-colors">
+                Marcus Vance
+              </h4>
+<p class="font-body-md text-body-md text-primary-fixed-dim font-medium mb-1">
+                Founder &amp; CTO at HyperScale Vector
+              </p>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-sm text-body-sm mb-space-md">
+<span class="material-symbols-outlined text-[15px] text-outline">location_on</span>
+<span>San Francisco, CA • Hiring Staff Roles</span>
+</div>
+<div class="p-space-sm rounded-xl bg-surface-container-lowest/80 mb-space-md">
+<div class="flex items-center gap-1 text-secondary font-label-sm text-label-sm font-semibold mb-1">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span>
+<span>AI Match Rationale</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Building distributed vector indexing in Rust; actively hiring and collaborating with Staff Engineers in kernel optimization.
+                </p>
+</div>
+</div>
+<div class="pt-space-sm border-t border-surface-variant/30 flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Rust Vector Contributor</span>
+<a class="flex items-center gap-1 px-space-md py-1.5 rounded-lg bg-surface-container-highest hover:bg-primary hover:text-on-primary text-on-surface font-label-md text-label-md font-semibold transition-all" href="https://linkedin.com" target="_blank">
+<span>View LinkedIn</span>
+<span class="material-symbols-outlined text-[16px]">arrow_outward</span>
+</a>
+</div>
+</div>
+<!-- Candidate 3: Sarah Jenkins -->
+<div class="candidate-card group relative flex flex-col justify-between bg-surface-container/70 hover:bg-surface-container-high/80 backdrop-blur-xl rounded-2xl p-space-lg shadow-lg hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300" data-name="Sarah Jenkins Databricks" data-type="connect">
+<div class="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-secondary via-primary-container to-secondary-container opacity-80"></div>
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-space-md">
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-xl bg-surface-variant flex items-center justify-center text-primary font-headline-sm font-bold shadow-inner ring-1 ring-white/10">
+                    SJ
+                  </div>
+<span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-secondary rounded-full border-2 border-surface"></span>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-primary/15 text-primary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">device_hub</span>
+<span>Peer</span>
+</div>
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary/15 text-secondary font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[13px]">hub</span>
+<span>Connect • 94%</span>
+</div>
+</div>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold group-hover:text-primary transition-colors">
+                Sarah Jenkins
+              </h4>
+<p class="font-body-md text-body-md text-primary-fixed-dim font-medium mb-1">
+                Principal Architect at Databricks
+              </p>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-sm text-body-sm mb-space-md">
+<span class="material-symbols-outlined text-[15px] text-outline">location_on</span>
+<span>Mountain View, CA • OSS Lead</span>
+</div>
+<div class="p-space-sm rounded-xl bg-surface-container-lowest/80 mb-space-md">
+<div class="flex items-center gap-1 text-secondary font-label-sm text-label-sm font-semibold mb-1">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span>
+<span>AI Match Rationale</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Co-authored open-source inference runtimes and active committer to vLLM and TensorRT-LLM ecosystem repos.
+                </p>
+</div>
+</div>
+<div class="pt-space-sm border-t border-surface-variant/30 flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">vLLM Maintainer Group</span>
+<a class="flex items-center gap-1 px-space-md py-1.5 rounded-lg bg-surface-container-highest hover:bg-primary hover:text-on-primary text-on-surface font-label-md text-label-md font-semibold transition-all" href="https://linkedin.com" target="_blank">
+<span>View LinkedIn</span>
+<span class="material-symbols-outlined text-[16px]">arrow_outward</span>
+</a>
+</div>
+</div>
+<!-- Candidate 4: David K. Lin -->
+<div class="candidate-card group relative flex flex-col justify-between bg-surface-container/70 hover:bg-surface-container-high/80 backdrop-blur-xl rounded-2xl p-space-lg shadow-lg hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300" data-name="David K. Lin Apex Frontier Ventures" data-type="follow">
+<div class="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-tertiary via-tertiary-container to-surface-variant opacity-80"></div>
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-space-md">
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-xl bg-surface-variant flex items-center justify-center text-tertiary-container font-headline-sm font-bold shadow-inner ring-1 ring-white/10">
+                    DL
+                  </div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-tertiary/15 text-tertiary-fixed font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">monetization_on</span>
+<span>Adjacent Investor</span>
+</div>
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary-container/20 text-primary font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[13px]">rss_feed</span>
+<span>Follow • 89%</span>
+</div>
+</div>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold group-hover:text-primary transition-colors">
+                David K. Lin
+              </h4>
+<p class="font-body-md text-body-md text-primary-fixed-dim font-medium mb-1">
+                General Partner at Apex Frontier Ventures
+              </p>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-sm text-body-sm mb-space-md">
+<span class="material-symbols-outlined text-[15px] text-outline">location_on</span>
+<span>Menlo Park, CA • $250M Fund II</span>
+</div>
+<div class="p-space-sm rounded-xl bg-surface-container-lowest/80 mb-space-md">
+<div class="flex items-center gap-1 text-secondary font-label-sm text-label-sm font-semibold mb-1">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span>
+<span>AI Match Rationale</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Investing in Series A GenAI infrastructure; regularly posts technical teardowns aligned with Alex's angel syndicate targets.
+                </p>
+</div>
+</div>
+<div class="pt-space-sm border-t border-surface-variant/30 flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Series A Infra Syndicate</span>
+<a class="flex items-center gap-1 px-space-md py-1.5 rounded-lg bg-surface-container-highest hover:bg-primary hover:text-on-primary text-on-surface font-label-md text-label-md font-semibold transition-all" href="https://linkedin.com" target="_blank">
+<span>View LinkedIn</span>
+<span class="material-symbols-outlined text-[16px]">arrow_outward</span>
+</a>
+</div>
+</div>
+<!-- Candidate 5: Priya Nair -->
+<div class="candidate-card group relative flex flex-col justify-between bg-surface-container/70 hover:bg-surface-container-high/80 backdrop-blur-xl rounded-2xl p-space-lg shadow-lg hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300" data-name="Priya Nair Anthropic Ecosystem" data-type="follow">
+<div class="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-tertiary-container via-primary to-secondary opacity-80"></div>
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-space-md">
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-xl bg-surface-variant flex items-center justify-center text-tertiary-fixed-dim font-headline-sm font-bold shadow-inner ring-1 ring-white/10">
+                    PN
+                  </div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-tertiary/15 text-tertiary-fixed font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">psychology</span>
+<span>Thought Leader</span>
+</div>
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary-container/20 text-primary font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[13px]">rss_feed</span>
+<span>Follow • 91%</span>
+</div>
+</div>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold group-hover:text-primary transition-colors">
+                Priya Nair
+              </h4>
+<p class="font-body-md text-body-md text-primary-fixed-dim font-medium mb-1">
+                Head of Engineering at Anthropic Ecosystem
+              </p>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-sm text-body-sm mb-space-md">
+<span class="material-symbols-outlined text-[15px] text-outline">location_on</span>
+<span>San Francisco, CA • Agent Systems</span>
+</div>
+<div class="p-space-sm rounded-xl bg-surface-container-lowest/80 mb-space-md">
+<div class="flex items-center gap-1 text-secondary font-label-sm text-label-sm font-semibold mb-1">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span>
+<span>AI Match Rationale</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Shares authoritative insights on multi-agent alignment and prompt architectures matching Alex's active framework interests.
+                </p>
+</div>
+</div>
+<div class="pt-space-sm border-t border-surface-variant/30 flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Multi-Agent Protocol Node</span>
+<a class="flex items-center gap-1 px-space-md py-1.5 rounded-lg bg-surface-container-highest hover:bg-primary hover:text-on-primary text-on-surface font-label-md text-label-md font-semibold transition-all" href="https://linkedin.com" target="_blank">
+<span>View LinkedIn</span>
+<span class="material-symbols-outlined text-[16px]">arrow_outward</span>
+</a>
+</div>
+</div>
+<!-- Candidate 6: Lucas Moreau -->
+<div class="candidate-card group relative flex flex-col justify-between bg-surface-container/70 hover:bg-surface-container-high/80 backdrop-blur-xl rounded-2xl p-space-lg shadow-lg hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300" data-name="Lucas Moreau Mistral AI" data-type="connect">
+<div class="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-secondary via-primary to-primary-container opacity-80"></div>
+<div>
+<div class="flex items-start justify-between gap-space-sm mb-space-md">
+<div class="relative flex-shrink-0">
+<div class="w-14 h-14 rounded-xl bg-surface-variant flex items-center justify-center text-secondary font-headline-sm font-bold shadow-inner ring-1 ring-white/10">
+                    LM
+                  </div>
+<span class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-secondary rounded-full border-2 border-surface"></span>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-primary/15 text-primary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">terminal</span>
+<span>Peer Architect</span>
+</div>
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary/15 text-secondary font-label-sm text-label-sm font-bold">
+<span class="material-symbols-outlined text-[13px]">hub</span>
+<span>Connect • 96%</span>
+</div>
+</div>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface font-bold group-hover:text-primary transition-colors">
+                Lucas Moreau
+              </h4>
+<p class="font-body-md text-body-md text-primary-fixed-dim font-medium mb-1">
+                Senior Staff Infrastructure Engineer at Mistral AI
+              </p>
+<div class="flex items-center gap-1 text-on-surface-variant font-body-sm text-body-sm mb-space-md">
+<span class="material-symbols-outlined text-[15px] text-outline">location_on</span>
+<span>Paris / Remote • GPU Clustering</span>
+</div>
+<div class="p-space-sm rounded-xl bg-surface-container-lowest/80 mb-space-md">
+<div class="flex items-center gap-1 text-secondary font-label-sm text-label-sm font-semibold mb-1">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span>
+<span>AI Match Rationale</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Direct overlap in distributed GPU clustering, Slurm job orchestration, and high-throughput model serving pipelines.
+                </p>
+</div>
+</div>
+<div class="pt-space-sm border-t border-surface-variant/30 flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Mistral Core Serving Cluster</span>
+<a class="flex items-center gap-1 px-space-md py-1.5 rounded-lg bg-surface-container-highest hover:bg-primary hover:text-on-primary text-on-surface font-label-md text-label-md font-semibold transition-all" href="https://linkedin.com" target="_blank">
+<span>View LinkedIn</span>
+<span class="material-symbols-outlined text-[16px]">arrow_outward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Empty Filter State (Hidden initially) -->
+<div class="hidden flex-col items-center justify-center p-space-xl bg-surface-container/40 rounded-2xl text-center" id="empty-state">
+<span class="material-symbols-outlined text-[48px] text-on-surface-variant mb-space-sm">filter_list_off</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">No candidate matches found</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-sm mt-1">Try relaxing your search query or reset candidate filters to explore the whole network graph.</p>
+<button class="mt-space-md px-space-md py-1.5 rounded-full bg-primary text-on-primary font-label-md text-label-md" onclick="filterCandidates('all')">Reset Filters</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+    // Ingestion Tab Switching Logic
+    function switchTab(tab) {
+      const tabs = ['pdf', 'github', 'linkedin'];
+      tabs.forEach(t => {
+        const content = document.getElementById(`tab-content-${t}`);
+        const btn = document.getElementById(`tab-btn-${t}`);
+        if (t === tab) {
+          content.classList.remove('hidden');
+          content.classList.add('flex');
+          btn.className = "tab-button flex items-center gap-1.5 px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary-container font-label-md text-label-md font-semibold transition-all shadow-md";
+        } else {
+          content.classList.add('hidden');
+          content.classList.remove('flex');
+          btn.className = "tab-button flex items-center gap-1.5 px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all";
+        }
+      });
+    }
+
+    // Engine Config Drawer Toggle
+    const toggleEngineBtn = document.getElementById('toggle-engine-btn');
+    const closeEngineBtn = document.getElementById('close-engine-btn');
+    const saveKeysBtn = document.getElementById('save-keys-btn');
+    const engineDrawer = document.getElementById('engine-config-drawer');
+
+    if (toggleEngineBtn && engineDrawer) {
+      toggleEngineBtn.addEventListener('click', () => {
+        engineDrawer.classList.toggle('hidden');
+        if (!engineDrawer.classList.contains('hidden')) {
+          engineDrawer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }
+    if (closeEngineBtn && engineDrawer) {
+      closeEngineBtn.addEventListener('click', () => {
+        engineDrawer.classList.add('hidden');
+      });
+    }
+    if (saveKeysBtn && engineDrawer) {
+      saveKeysBtn.addEventListener('click', () => {
+        saveKeysBtn.innerText = "Saved & Active!";
+        setTimeout(() => {
+          saveKeysBtn.innerText = "Save Configuration";
+          engineDrawer.classList.add('hidden');
+        }, 800);
+      });
+    }
+
+    // Simulated Scan Execution Animation
+    function triggerAnalysisPipeline() {
+      const btn = document.getElementById('analyze-action-btn');
+      const tracker = document.getElementById('pipeline-tracker');
+      const percentage = document.getElementById('pipeline-percentage');
+      
+      const originalHTML = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = `
+        <span class="material-symbols-outlined text-[24px] animate-spin">progress_activity</span>
+        <span>Synthesizing Identity Vector...</span>
+      `;
+      
+      tracker.classList.remove('hidden');
+      percentage.innerHTML = 'Crawling SERP Nodes... 35%';
+
+      setTimeout(() => {
+        percentage.innerHTML = 'Ranking Cross-Affinity Vectors... 78%';
+      }, 900);
+
+      setTimeout(() => {
+        percentage.innerHTML = 'Step 4/4 Complete &bull; 100%';
+        btn.innerHTML = originalHTML;
+        btn.disabled = false;
+        
+        // Flash subtle success aura on candidate grid
+        const grid = document.getElementById('candidate-grid');
+        grid.classList.add('ring-2', 'ring-secondary/40', 'rounded-2xl', 'p-1');
+        setTimeout(() => {
+          grid.classList.remove('ring-2', 'ring-secondary/40', 'rounded-2xl', 'p-1');
+        }, 1500);
+      }, 1900);
+    }
+
+    // Candidate Filtering Logic
+    let currentFilter = 'all';
+
+    function filterCandidates(type) {
+      currentFilter = type;
+      const allBtn = document.getElementById('filter-all');
+      const connectBtn = document.getElementById('filter-connect');
+      const followBtn = document.getElementById('filter-follow');
+
+      const buttons = [
+        { el: allBtn, key: 'all' },
+        { el: connectBtn, key: 'connect' },
+        { el: followBtn, key: 'follow' }
+      ];
+
+      buttons.forEach(b => {
+        if (b.key === type) {
+          b.el.className = "filter-tab px-space-md py-1.5 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md font-semibold transition-all shadow-md";
+        } else {
+          b.el.className = "filter-tab px-space-md py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all";
+        }
+      });
+
+      applyCandidateVisibility();
+    }
+
+    function handleCandidateSearch(query) {
+      applyCandidateVisibility();
+    }
+
+    function applyCandidateVisibility() {
+      const query = (document.getElementById('candidate-search').value || '').toLowerCase().trim();
+      const cards = document.querySelectorAll('.candidate-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const type = card.getAttribute('data-type');
+        const name = (card.getAttribute('data-name') || '').toLowerCase();
+
+        const matchesType = (currentFilter === 'all' || type === currentFilter);
+        const matchesQuery = query === '' || name.includes(query);
+
+        if (matchesType && matchesQuery) {
+          card.classList.remove('hidden');
+          card.classList.add('flex');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+          card.classList.remove('flex');
+        }
+      });
+
+      const emptyState = document.getElementById('empty-state');
+      if (visibleCount === 0) {
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+      } else {
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('flex');
+      }
+    }
+  </script>
+</div></main></div></body></html>

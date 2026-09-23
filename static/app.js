@@ -1,213 +1,260 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Tab Switching Logic
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-    
-    let currentTab = 'pdf';
+  // Ingestion Tab Switching Logic
+  const tabButtons = document.querySelectorAll('.tab-button');
+  const tabContents = {
+    pdf: document.getElementById('tab-content-pdf'),
+    github: document.getElementById('tab-content-github'),
+    linkedin: document.getElementById('tab-content-linkedin')
+  };
 
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            // Remove active classes
-            tabBtns.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-            
-            // Add active class to clicked tab
-            btn.classList.add('active');
-            const tabId = btn.getAttribute('data-tab');
-            document.getElementById(`tab-${tabId}`).classList.add('active');
-            currentTab = tabId;
-        });
-    });
+  let activeTab = 'pdf';
 
-    // File Upload Display
-    const resumeFileInput = document.getElementById('resumeFile');
-    const fileNameDisplay = document.getElementById('fileName');
-
-    resumeFileInput.addEventListener('change', (e) => {
-        if (e.target.files.length > 0) {
-            fileNameDisplay.textContent = e.target.files[0].name;
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeTab = btn.getAttribute('data-tab');
+      
+      // Update buttons
+      tabButtons.forEach(b => {
+        if (b.getAttribute('data-tab') === activeTab) {
+          b.className = "tab-button active px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary-container font-label-md shadow-md";
         } else {
-            fileNameDisplay.textContent = '';
+          b.className = "tab-button px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-label-md";
         }
+      });
+
+      // Update contents
+      Object.keys(tabContents).forEach(key => {
+        if (key === activeTab) {
+          tabContents[key].classList.remove('hidden');
+          tabContents[key].classList.add('flex');
+        } else {
+          tabContents[key].classList.add('hidden');
+          tabContents[key].classList.remove('flex');
+        }
+      });
     });
+  });
 
-    // Form Submission
-    const analyzeForm = document.getElementById('analyzeForm');
-    const analyzeBtn = document.getElementById('analyzeBtn');
-    const loadingState = document.getElementById('loadingState');
-    const errorState = document.getElementById('errorState');
-    const errorMessage = document.getElementById('errorMessage');
-    const resultsSection = document.getElementById('resultsSection');
+  // File Upload Display
+  const resumeUpload = document.getElementById('resume-upload');
+  const fileNameDisplay = document.getElementById('file-name-display');
+  resumeUpload.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+      fileNameDisplay.textContent = e.target.files[0].name;
+      fileNameDisplay.classList.remove('hidden');
+    } else {
+      fileNameDisplay.classList.add('hidden');
+    }
+  });
 
-    analyzeForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        // Hide previous results/errors
-        errorState.style.display = 'none';
-        resultsSection.style.display = 'none';
-        
-        // Validate Inputs
-        const geminiKey = document.getElementById('geminiKey').value;
-        if (!geminiKey) {
-            showError("Please enter your Gemini API Key in the sidebar.");
-            return;
-        }
+  // Engine Config Drawer Toggle
+  const toggleEngineBtn = document.getElementById('toggle-engine-btn');
+  const closeEngineBtn = document.getElementById('close-engine-btn');
+  const engineDrawer = document.getElementById('engine-config-drawer');
 
-        const formData = new FormData();
-        formData.append('gemini_key', geminiKey);
-        
-        const serperKey = document.getElementById('serperKey').value;
-        if (serperKey) formData.append('serper_key', serperKey);
-
-        if (currentTab === 'pdf') {
-            if (resumeFileInput.files.length === 0) {
-                showError("Please upload a PDF resume.");
-                return;
-            }
-            formData.append('resume_file', resumeFileInput.files[0]);
-        } else if (currentTab === 'github') {
-            const githubUrl = document.getElementById('githubUrl').value;
-            if (!githubUrl) {
-                showError("Please enter a GitHub URL.");
-                return;
-            }
-            formData.append('github_url', githubUrl);
-        } else if (currentTab === 'linkedin') {
-            const linkedinUrl = document.getElementById('linkedinUrl').value;
-            if (!linkedinUrl) {
-                showError("Please enter a LinkedIn URL.");
-                return;
-            }
-            formData.append('linkedin_url', linkedinUrl);
-        }
-
-        // UI Loading State
-        analyzeBtn.disabled = true;
-        loadingState.style.display = 'block';
-
-        try {
-            const response = await fetch('/api/analyze', {
-                method: 'POST',
-                body: formData
-            });
-
-            let data;
-            const text = await response.text();
-            try {
-                data = JSON.parse(text);
-            } catch (e) {
-                // Not JSON response
-            }
-
-            if (!response.ok) {
-                if (data && data.detail) {
-                    let errorMsg = typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail);
-                    throw new Error(errorMsg);
-                } else {
-                    throw new Error(`Error ${response.status}: ${text || response.statusText || "An error occurred during analysis."}`);
-                }
-            }
-
-            renderResults(data.profile, data.suggestions);
-
-        } catch (error) {
-            showError(error.message);
-        } finally {
-            analyzeBtn.disabled = false;
-            loadingState.style.display = 'none';
-        }
+  if (toggleEngineBtn && engineDrawer) {
+    toggleEngineBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      engineDrawer.classList.toggle('hidden');
+      if (!engineDrawer.classList.contains('hidden')) {
+        engineDrawer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
+  }
+  if (closeEngineBtn && engineDrawer) {
+    closeEngineBtn.addEventListener('click', () => {
+      engineDrawer.classList.add('hidden');
+    });
+  }
 
-    function showError(msg) {
-        errorMessage.textContent = msg;
-        errorState.style.display = 'block';
+  // Analysis Pipeline
+  const analyzeBtn = document.getElementById('analyze-action-btn');
+  const tracker = document.getElementById('pipeline-tracker');
+  const resultsSection = document.getElementById('results-section');
+  const profileContainer = document.getElementById('profile-container');
+  const candidateGrid = document.getElementById('candidate-grid');
+
+  analyzeBtn.addEventListener('click', async () => {
+    const geminiKey = document.getElementById('gemini-key').value.trim();
+    if (!geminiKey) {
+      alert('Gemini API Key is required.');
+      engineDrawer.classList.remove('hidden');
+      return;
     }
 
-    // Render Results Function
-    function renderResults(profile, suggestions) {
-        // Render Profile
-        const profilePreview = document.getElementById('profilePreview');
-        
-        let skillsHtml = (profile.skills && profile.skills.length) ? profile.skills.map(s => `<span class="skill-tag">${s}</span>`).join('') : '';
-        let educationHtml = (profile.education && profile.education.length) ? `<div class="card-section" style="margin-top: 1.5rem;"><h4><i class="fas fa-graduation-cap"></i> Education</h4><p style="color: var(--text-muted); font-size: 0.95rem;">${profile.education.join(', ')}</p></div>` : '';
-        let interestsHtml = (profile.interests && profile.interests.length) ? `<div class="card-section" style="margin-top: 1.5rem;"><h4><i class="fas fa-star"></i> Interests</h4><p style="color: var(--text-muted); font-size: 0.95rem;">${profile.interests.join(', ')}</p></div>` : '';
-        
-        let linksHtml = '';
-        if (profile.linkedin_url || profile.github_url) {
-            linksHtml = `<div class="profile-links" style="margin-top: 1.5rem; display: flex; gap: 1rem;">`;
-            if (profile.linkedin_url) linksHtml += `<a href="${profile.linkedin_url}" target="_blank" style="color: var(--primary);"><i class="fab fa-linkedin"></i> LinkedIn</a>`;
-            if (profile.github_url) linksHtml += `<a href="${profile.github_url}" target="_blank" style="color: var(--text-main);"><i class="fab fa-github"></i> GitHub</a>`;
-            linksHtml += `</div>`;
-        }
-        
-        profilePreview.innerHTML = `
-            <h2>${profile.name || 'Analyzed Profile'}</h2>
-            ${(profile.headline || (profile.job_titles && profile.job_titles.length)) ? `<div class="headline">${profile.headline || profile.job_titles.join(' | ')}</div>` : ''}
-            
-            <div class="profile-meta">
-                ${profile.location ? `<span><i class="fas fa-map-marker-alt"></i> ${profile.location}</span>` : ''}
-                ${profile.experience_years ? `<span><i class="fas fa-briefcase"></i> ${profile.experience_years}+ Years Exp</span>` : ''}
-                ${profile.industries && profile.industries.length ? `<span><i class="fas fa-industry"></i> ${profile.industries.join(', ')}</span>` : ''}
-            </div>
-            
-            ${skillsHtml ? `<div class="skills-tags">${skillsHtml}</div>` : ''}
-            
-            ${educationHtml}
-            ${interestsHtml}
-            ${linksHtml}
-        `;
-
-        // Render Suggestions
-        const grid = document.getElementById('suggestionsGrid');
-        
-        let tableHTML = `
-            <div style="overflow-x: auto;">
-                <table class="suggestions-table">
-                    <thead>
-                        <tr>
-                            <th>Candidate</th>
-                            <th>Category</th>
-                            <th>Action</th>
-                            <th>Links</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-        `;
-        
-        suggestions.forEach(s => {
-            const actionClass = s.action === 'Follow' ? 'badge-follow' : 'badge-connect';
-            tableHTML += `
-                <tr>
-                    <td>
-                        <div class="candidate-info">
-                            <div class="candidate-name">${s.name}</div>
-                            <div class="candidate-title">${s.title}</div>
-                        </div>
-                    </td>
-                    <td><span class="category-badge-table">${s.category}</span></td>
-                    <td><span class="action-badge ${actionClass}">${s.action || 'Connect'}</span></td>
-                    <td>
-                        <div class="table-actions">
-                            <a href="${s.url}" target="_blank" class="action-btn-sm btn-primary" title="View Profile">
-                                <i class="fab fa-linkedin"></i>
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        });
-        
-        tableHTML += `</tbody></table></div>`;
-        grid.innerHTML = tableHTML;
-
-        resultsSection.style.display = 'block';
-        resultsSection.scrollIntoView({ behavior: 'smooth' });
+    const formData = new FormData();
+    formData.append('gemini_key', geminiKey);
+    
+    const serperKey = document.getElementById('serper-key').value.trim();
+    if (serperKey) {
+      formData.append('serper_key', serperKey);
     }
+
+    if (activeTab === 'pdf') {
+      const file = resumeUpload.files[0];
+      if (!file) {
+        alert('Please select a PDF resume.');
+        return;
+      }
+      formData.append('resume_file', file);
+    } else if (activeTab === 'github') {
+      const url = document.getElementById('github-url').value.trim();
+      if (!url) {
+        alert('Please enter a GitHub URL.');
+        return;
+      }
+      formData.append('github_url', url);
+    } else if (activeTab === 'linkedin') {
+      const url = document.getElementById('linkedin-url').value.trim();
+      if (!url) {
+        alert('Please enter a LinkedIn URL.');
+        return;
+      }
+      formData.append('linkedin_url', url);
+    }
+
+    // UI Loading state
+    const originalHTML = analyzeBtn.innerHTML;
+    analyzeBtn.disabled = true;
+    analyzeBtn.innerHTML = `
+      <span class="material-symbols-outlined text-[24px] animate-spin">progress_activity</span>
+      <span>Synthesizing Identity Vector...</span>
+    `;
+    
+    tracker.classList.remove('hidden');
+    tracker.innerHTML = 'Crawling SERP Nodes & Ranking...';
+    resultsSection.classList.add('hidden');
+
+    try {
+      const response = await fetch('/api/analyze', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.detail || 'Analysis failed');
+      }
+
+      const data = await response.json();
+      renderResults(data);
+      
+      tracker.innerHTML = 'Step Complete &bull; 100%';
+      resultsSection.classList.remove('hidden');
+      resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    } catch (error) {
+      alert(`Error: ${error.message}`);
+      tracker.classList.add('hidden');
+    } finally {
+      analyzeBtn.innerHTML = originalHTML;
+      analyzeBtn.disabled = false;
+    }
+  });
+
+  function renderResults(data) {
+    const profile = data.profile;
+    const suggestions = data.suggestions;
+
+    // Render Profile
+    const profileTpl = document.getElementById('profile-template').content.cloneNode(true);
+    profileTpl.querySelector('.profile-name').textContent = profile.name || 'Unknown';
+    profileTpl.querySelector('.profile-headline').textContent = profile.headline || '';
+    profileTpl.querySelector('.profile-location').textContent = profile.location || 'Unknown Location';
+    profileTpl.querySelector('.profile-experience').textContent = profile.experience_years ? `${profile.experience_years} Years Experience` : 'N/A';
+    profileTpl.querySelector('.profile-education').textContent = profile.education || 'N/A';
+    
+    const skillsContainer = profileTpl.querySelector('.profile-skills');
+    (profile.skills || []).slice(0, 10).forEach((skill, i) => {
+      const span = document.createElement('span');
+      // Alternate colors based on index for a dynamic look
+      const classes = ['text-primary', 'text-secondary', 'text-on-surface', 'text-primary-fixed', 'text-secondary-fixed'];
+      span.className = `px-2.5 py-1 rounded-md bg-surface-container-high font-label-sm font-medium shadow-sm ${classes[i % classes.length]}`;
+      span.textContent = skill;
+      skillsContainer.appendChild(span);
+    });
+
+    profileTpl.querySelector('.profile-interests').textContent = (profile.interests || []).join(' • ');
+
+    profileContainer.innerHTML = '';
+    profileContainer.appendChild(profileTpl);
+
+    // Render Candidates
+    candidateGrid.innerHTML = '';
+    suggestions.forEach(suggestion => {
+      const candTpl = document.getElementById('candidate-template').content.cloneNode(true);
+      const card = candTpl.querySelector('.candidate-card');
+      
+      // Set type for filtering
+      card.setAttribute('data-type', suggestion.action);
+      
+      // Initials
+      const initials = (suggestion.name || '??').split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+      candTpl.querySelector('.initials-badge').textContent = initials;
+
+      // Category badge
+      const catBadge = candTpl.querySelector('.category-badge');
+      catBadge.classList.add('bg-tertiary/15', 'text-tertiary-fixed');
+      catBadge.innerHTML = `<span class="material-symbols-outlined text-[14px]">psychology</span><span>${suggestion.category || 'Peer'}</span>`;
+
+      // Action badge
+      const actBadge = candTpl.querySelector('.action-badge');
+      if (suggestion.action === 'Connect') {
+        actBadge.classList.add('bg-secondary/15', 'text-secondary');
+        actBadge.innerHTML = `<span class="material-symbols-outlined text-[13px]">hub</span><span>Connect</span>`;
+      } else {
+        actBadge.classList.add('bg-primary-container/20', 'text-primary');
+        actBadge.innerHTML = `<span class="material-symbols-outlined text-[13px]">rss_feed</span><span>Follow</span>`;
+      }
+
+      candTpl.querySelector('.candidate-name').textContent = suggestion.name;
+      candTpl.querySelector('.candidate-title').textContent = suggestion.title;
+      candTpl.querySelector('.candidate-snippet').textContent = suggestion.snippet;
+      
+      const link = candTpl.querySelector('.candidate-url');
+      if (suggestion.url) {
+        link.href = suggestion.url;
+      } else {
+        link.classList.add('hidden');
+      }
+
+      candidateGrid.appendChild(candTpl);
+    });
+
+    // Apply current filter
+    applyCandidateFilter();
+  }
+
+  // Filtering Logic
+  const filterBtns = document.querySelectorAll('.filter-btn');
+  let currentFilter = 'all';
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      currentFilter = btn.getAttribute('data-filter');
+      
+      filterBtns.forEach(b => {
+        if (b.getAttribute('data-filter') === currentFilter) {
+          b.className = "filter-btn px-space-md py-1.5 rounded-full bg-primary-container text-on-primary-container font-label-md transition-all";
+        } else {
+          b.className = "filter-btn px-space-md py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md transition-all";
+        }
+      });
+
+      applyCandidateFilter();
+    });
+  });
+
+  function applyCandidateFilter() {
+    const cards = document.querySelectorAll('.candidate-card');
+    cards.forEach(card => {
+      if (currentFilter === 'all' || card.getAttribute('data-type') === currentFilter) {
+        card.classList.remove('hidden');
+        card.classList.add('flex');
+      } else {
+        card.classList.add('hidden');
+        card.classList.remove('flex');
+      }
+    });
+  }
 });
-
-// Global copy function for the buttons
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        alert("Connection message copied to clipboard!");
-    });
-}
