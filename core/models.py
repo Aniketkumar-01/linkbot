@@ -1,5 +1,5 @@
-from pydantic import BaseModel, Field
 from typing import List, Optional
+from pydantic import BaseModel, Field
 
 class UserProfile(BaseModel):
     name: str = ""
@@ -30,4 +30,9 @@ class LinkedInSuggestion(BaseModel):
     def validate_to_json(cls, value):
         return value
 
+class ActionAssignment(BaseModel):
+    url: str
+    action: str
 
+class ActionsResponse(BaseModel):
+    assignments: List[ActionAssignment]

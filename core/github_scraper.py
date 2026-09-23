@@ -42,8 +42,8 @@ async def scrape_github_profile(github_url: str, client: httpx.AsyncClient) -> s
         if user_data.get('location'):
             summary.append(f"Location: {user_data.get('location')}")
             
-        # 2. Get repositories
-        repos_resp = await client.get(f"https://api.github.com/users/{username}/repos?sort=updated&per_page=10", headers=headers)
+        # 2. Get top repositories by stars
+        repos_resp = await client.get(f"https://api.github.com/users/{username}/repos?sort=stargazers&per_page=5", headers=headers)
         
         if repos_resp.status_code == 200:
             repos_data = repos_resp.json()

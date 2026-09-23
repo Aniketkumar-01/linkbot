@@ -45,13 +45,12 @@ async def analyze_profile(
     serper_key: Optional[str] = Form(None),
     resume_file: Optional[UploadFile] = File(None),
     github_url: Optional[str] = Form(None),
-    linkedin_url: Optional[str] = Form(None)
+    bio_text: Optional[str] = Form(None)
 ):
     if not gemini_key:
         raise HTTPException(status_code=400, detail="Gemini API Key is required")
 
     extracted_text_parts = []
-    user_linkedin_url = ""
 
     if resume_file:
         try:
@@ -72,9 +71,8 @@ async def analyze_profile(
         else:
             raise HTTPException(status_code=400, detail="Invalid GitHub URL")
 
-    if linkedin_url:
-        user_linkedin_url = linkedin_url
-        extracted_text_parts.append(f"My LinkedIn URL is: {linkedin_url}")
+    if bio_text:
+        extracted_text_parts.append(f"Professional Summary / Bio: {bio_text}")
 
     if not extracted_text_parts:
         raise HTTPException(status_code=400, detail="Please provide a resume, GitHub URL, or LinkedIn URL.")
@@ -84,22 +82,22 @@ async def analyze_profile(
     try:
         # Step 1: Analyze Profile
         user_profile = await analyze_profile_with_gemini(extracted_text, gemini_key)
-        if user_linkedin_url:
-            user_profile.linkedin_url = user_linkedin_url
             
         if not user_profile:
             raise HTTPException(status_code=500, detail="Failed to analyze profile with Gemini.")
 
-        # Step 2: Search LinkedIn
-        raw_suggestions = await search_for_connections(
-            user_profile,
-            AppState.http_client,
-            serper_api_key=serper_key,
-            progress_callback=None
-        )
+        final_results = []
+        if serper_key:
+            # Step 2: Search LinkedIn
+            raw_suggestions = await search_for_connections(
+                user_profile,
+                AppState.http_client,
+                serper_api_key=serper_key,
+                progress_callback=None
+            )
 
-        # Step 3: Rank Results
-        final_results = await rank_and_score_results(user_profile, raw_suggestions, AppState.http_client, gemini_key)
+            # Step 3: Rank Results
+            final_results = await rank_and_score_results(user_profile, raw_suggestions, AppState.http_client, gemini_key)
         
         # Serialize and return
         return {

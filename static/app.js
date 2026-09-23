@@ -105,12 +105,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       formData.append('github_url', url);
     } else if (activeTab === 'linkedin') {
-      const url = document.getElementById('linkedin-url').value.trim();
-      if (!url) {
-        alert('Please enter a LinkedIn URL.');
+      const text = document.getElementById('bio-text').value.trim();
+      if (!text) {
+        alert('Please paste a bio or summary.');
         return;
       }
-      formData.append('linkedin_url', url);
+      formData.append('bio_text', text);
     }
 
     // UI Loading state
@@ -118,11 +118,18 @@ document.addEventListener('DOMContentLoaded', () => {
     analyzeBtn.disabled = true;
     analyzeBtn.innerHTML = `
       <span class="material-symbols-outlined text-[24px] animate-spin">progress_activity</span>
-      <span>Synthesizing Identity Vector...</span>
+      <span>Synthesizing structured user profile...</span>
     `;
     
     tracker.classList.remove('hidden');
-    tracker.innerHTML = 'Crawling SERP Nodes & Ranking...';
+    
+    const serperKeyForTracking = document.getElementById('serper-key').value.trim();
+    if (serperKeyForTracking) {
+      tracker.innerHTML = 'Crawling SERP Nodes & Ranking...';
+    } else {
+      tracker.innerHTML = 'Serper key omitted - Skipping candidate search...';
+    }
+    
     resultsSection.classList.add('hidden');
 
     try {
