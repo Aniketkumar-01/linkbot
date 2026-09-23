@@ -132,8 +132,20 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.detail || 'Analysis failed');
+        let errData;
+        try {
+          errData = await response.json();
+        } catch(e) {
+          throw new Error("We had trouble connecting to the server. Please try again.");
+        }
+        
+        let message = 'Analysis failed';
+        if (Array.isArray(errData.detail)) {
+          message = "We couldn't process your input. Please make sure your links and files are valid.";
+        } else if (errData.detail) {
+          message = errData.detail;
+        }
+        throw new Error(message);
       }
 
       const data = await response.json();
@@ -144,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
       resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     } catch (error) {
-      alert(`Error: ${error.message}`);
+      alert(error.message);
       tracker.classList.add('hidden');
     } finally {
       analyzeBtn.innerHTML = originalHTML;
@@ -209,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       candTpl.querySelector('.candidate-name').textContent = suggestion.name;
       candTpl.querySelector('.candidate-title').textContent = suggestion.title;
-      candTpl.querySelector('.candidate-snippet').textContent = suggestion.snippet;
+
       
       const link = candTpl.querySelector('.candidate-url');
       if (suggestion.url) {

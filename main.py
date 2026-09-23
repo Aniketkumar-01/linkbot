@@ -111,4 +111,14 @@ async def analyze_profile(
         raise
     except Exception as e:
         logger.exception("Internal Server Error during profile analysis pipeline.")
-        raise HTTPException(status_code=500, detail=f"An internal error occurred during analysis: {str(e)}")
+        error_msg = str(e).lower()
+        if "api_key" in error_msg or "403" in error_msg or "permission" in error_msg or "invalid argument" in error_msg:
+            friendly_message = "It looks like your Gemini API key might be invalid or expired. Please double-check your Engine Settings."
+        elif "quota" in error_msg or "429" in error_msg or "exhausted" in error_msg:
+            friendly_message = "Your AI service quota has been exceeded. Please check your API account."
+        elif "json" in error_msg or "validation" in error_msg or "parse" in error_msg:
+            friendly_message = "We couldn't quite understand the data. Please make sure your URLs or files are valid."
+        else:
+            friendly_message = "Oops! We hit a temporary roadblock while analyzing your profile. Please try again in a moment."
+            
+        raise HTTPException(status_code=500, detail=friendly_message)
