@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Privacy Policy | Linkbot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface":"#0e1321","surface-container":"#1a1f2e","on-surface":"#dee2f6","primary":"#4cd7f6"}}}}
+  </script>
+</head>
+<body class="bg-surface text-on-surface font-['Inter'] antialiased min-h-screen">
+  <div class="max-w-3xl mx-auto py-12 px-6">
+    <a href="/" class="text-primary hover:underline text-sm mb-8 inline-block">&larr; Back to Linkbot</a>
+    
+    <h1 class="text-3xl font-bold mb-6">Privacy Policy</h1>
+    <p class="text-gray-400 mb-8 text-sm">Last updated: September 23, 2026</p>
+    
+    <div class="space-y-6">
+      <section>
+        <h2 class="text-xl font-semibold mb-2">1. Stateless BYOK Architecture</h2>
+        <p class="text-gray-300">Linkbot is a completely stateless, "Bring Your Own Key" (BYOK) application. We do not use user accounts, and we do not operate a backend database. Your data remains yours.</p>
+      </section>
+      
+      <section>
+        <h2 class="text-xl font-semibold mb-2">2. API Keys</h2>
+        <p class="text-gray-300">Any Gemini or Serper API keys you provide are used strictly in-memory during a single analysis request. They are <strong>never stored, logged, or persisted</strong> to our servers, nor are they saved in your browser's local storage.</p>
+      </section>
+      
+      <section>
+        <h2 class="text-xl font-semibold mb-2">3. Uploaded Data</h2>
+        <p class="text-gray-300">Resumes (PDFs), GitHub URLs, and pasted bio texts are processed transiently to generate your structured profile. Once the server returns the response to your browser, all uploaded and extracted data is immediately discarded. Nothing is retained.</p>
+      </section>
+      
+      <section>
+        <h2 class="text-xl font-semibold mb-2">4. Third-Party Services</h2>
+        <p class="text-gray-300">To provide its core functionality, Linkbot passes your transient data to the following third-party APIs during an active request:</p>
+        <ul class="list-disc pl-5 mt-2 text-gray-300 space-y-1">
+          <li><strong>Google Gemini API:</strong> For synthesizing your profile and assigning candidate actions.</li>
+          <li><strong>Serper API:</strong> For executing live Google searches to find LinkedIn candidates.</li>
+          <li><strong>GitHub Public REST API:</strong> For fetching public repository and bio data (if a GitHub URL is provided).</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

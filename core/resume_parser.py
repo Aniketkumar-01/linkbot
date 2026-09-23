@@ -1,5 +1,8 @@
 import pdfplumber
 import re
+import logging
+
+logger = logging.getLogger(__name__)
 
 def extract_text_from_pdf(pdf_file) -> str:
     """
@@ -15,7 +18,7 @@ def extract_text_from_pdf(pdf_file) -> str:
                     full_text += text + "\n\n"
     except Exception as e:
         # Fallback if there's an issue with pdfplumber
-        print(f"Error extracting PDF: {e}")
+        logger.error(f"Error extracting PDF: {e}")
         pass
     
     return full_text

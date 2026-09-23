@@ -7,6 +7,10 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from contextlib import asynccontextmanager
 import httpx
+from fastapi.middleware.cors import CORSMiddleware
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 from core.resume_parser import process_resume
 from core.github_scraper import scrape_github_profile
@@ -30,7 +34,22 @@ async def lifespan(app: FastAPI):
     yield
     await AppState.http_client.aclose()
 
+limiter = Limiter(key_func=get_remote_address)
 app = FastAPI(title="LinkBot API", lifespan=lifespan)
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+@app.exception_handler(404)
+async def custom_404_handler(request, exc):
+    return FileResponse("static/404.html", status_code=404)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://linkbot-8ljj.onrender.com"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Serve the static files from the 'static' directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -40,7 +59,9 @@ async def read_index():
     return FileResponse("static/index.html")
 
 @app.post("/api/analyze")
+@limiter.limit("10/minute")
 async def analyze_profile(
+    request: Request,
     gemini_key: str = Form(...),
     serper_key: Optional[str] = Form(None),
     resume_file: Optional[UploadFile] = File(None),
@@ -53,6 +74,16 @@ async def analyze_profile(
     extracted_text_parts = []
 
     if resume_file:
+        if resume_file.content_type != "application/pdf":
+            raise HTTPException(status_code=400, detail="Only PDF files are supported.")
+            
+        resume_file.file.seek(0, 2)
+        file_size = resume_file.file.tell()
+        resume_file.file.seek(0)
+        
+        if file_size > 5 * 1024 * 1024:
+            raise HTTPException(status_code=413, detail="File too large. Maximum size is 5MB.")
+
         try:
             extracted_text = process_resume(resume_file.file)
             extracted_text_parts.append(extracted_text)
@@ -61,6 +92,8 @@ async def analyze_profile(
             raise HTTPException(status_code=400, detail="Failed to process resume file.")
 
     if github_url:
+        if len(github_url) > 200:
+            raise HTTPException(status_code=400, detail="GitHub URL is too long.")
         if is_valid_github_url(github_url):
             try:
                 github_text = await scrape_github_profile(github_url, AppState.http_client)
@@ -72,6 +105,8 @@ async def analyze_profile(
             raise HTTPException(status_code=400, detail="Invalid GitHub URL")
 
     if bio_text:
+        if len(bio_text) > 10000:
+            raise HTTPException(status_code=400, detail="Bio text is too long (max 10,000 characters).")
         extracted_text_parts.append(f"Professional Summary / Bio: {bio_text}")
 
     if not extracted_text_parts:

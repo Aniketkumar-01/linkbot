@@ -4,6 +4,9 @@ import json
 from utils.constants import SEARCH_TEMPLATES, CATEGORY_SAME_ROLE, CATEGORY_INDUSTRY_PEER, CATEGORY_RECRUITER, CATEGORY_THOUGHT_LEADER, CATEGORY_ALUMNI, CATEGORY_ADJACENT
 from utils.helpers import clean_linkedin_url, extract_name_from_title, extract_title_from_snippet
 from .models import UserProfile, LinkedInSuggestion
+import logging
+
+logger = logging.getLogger(__name__)
 
 def generate_search_queries(profile: UserProfile) -> dict[str, list[str]]:
     """
@@ -96,7 +99,7 @@ async def execute_search_serper(query: str, category: str, api_key: str, client:
                     category=category
                 ))
     except Exception as e:
-        print(f"Serper search error: {e}")
+        logger.error(f"Serper search error: {e}")
         
     return suggestions
 

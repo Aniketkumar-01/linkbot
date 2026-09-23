@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>404 Not Found | Linkbot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config={darkMode:"class",theme:{extend:{"colors":{"surface":"#0e1321","surface-container":"#1a1f2e","on-surface":"#dee2f6","primary":"#4cd7f6"}}}}
+  </script>
+</head>
+<body class="bg-surface text-on-surface font-['Inter'] antialiased min-h-screen flex items-center justify-center">
+  <div class="relative bg-surface-container/70 backdrop-blur-xl rounded-2xl p-8 shadow-xl overflow-hidden max-w-md w-full text-center">
+    <div class="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-blue-500 via-primary to-purple-500"></div>
+    
+    <span class="material-symbols-outlined text-[64px] text-primary mb-4 block" style="font-family: 'Material Symbols Outlined';">explore_off</span>
+    
+    <h1 class="text-3xl font-bold mb-4">404 - Not Found</h1>
+    <p class="text-on-surface-variant mb-8">Oops! The page you're looking for doesn't exist or has been moved.</p>
+    
+    <a href="/" class="inline-block px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-primary text-white font-semibold hover:brightness-110 transition-all">
+      Return to Home
+    </a>
+  </div>
+</body>
+</html>

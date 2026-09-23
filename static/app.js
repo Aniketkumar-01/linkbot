@@ -1,42 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Load saved settings if available
-  try {
-    const savedGeminiKey = localStorage.getItem('linkbot_gemini_key');
-    const savedSerperKey = localStorage.getItem('linkbot_serper_key');
-    const savedGithubUrl = localStorage.getItem('linkbot_github_url');
-    const savedBioText = localStorage.getItem('linkbot_bio_text');
-
-    if (savedGeminiKey) document.getElementById('gemini-key').value = savedGeminiKey;
-    if (savedSerperKey) document.getElementById('serper-key').value = savedSerperKey;
-    if (savedGithubUrl) document.getElementById('github-url').value = savedGithubUrl;
-    if (savedBioText) document.getElementById('bio-text').value = savedBioText;
-  } catch (e) {
-    // localStorage unavailable, fail silently
-  }
-
-  const clearDataBtn = document.getElementById('clear-data-btn');
-  if (clearDataBtn) {
-    clearDataBtn.addEventListener('click', () => {
-      try {
-        localStorage.removeItem('linkbot_gemini_key');
-        localStorage.removeItem('linkbot_serper_key');
-        localStorage.removeItem('linkbot_github_url');
-        localStorage.removeItem('linkbot_bio_text');
-      } catch (e) {}
-
-      document.getElementById('gemini-key').value = '';
-      document.getElementById('serper-key').value = '';
-      document.getElementById('github-url').value = '';
-      document.getElementById('bio-text').value = '';
-
-      const msg = document.getElementById('clear-data-msg');
-      msg.classList.remove('opacity-0');
-      setTimeout(() => {
-        msg.classList.add('opacity-0');
-      }, 3000);
-    });
-  }
-
   // Ingestion Tab Switching Logic
   const tabButtons = document.querySelectorAll('.tab-button');
   const tabContents = {
@@ -192,20 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         throw new Error(message);
       }
-
-      // Analysis successful, save inputs
-      try {
-        if (geminiKey) localStorage.setItem('linkbot_gemini_key', geminiKey);
-        if (serperKey) localStorage.setItem('linkbot_serper_key', serperKey);
-        
-        if (activeTab === 'github') {
-          const url = document.getElementById('github-url').value.trim();
-          if (url) localStorage.setItem('linkbot_github_url', url);
-        } else if (activeTab === 'linkedin') {
-          const text = document.getElementById('bio-text').value.trim();
-          if (text) localStorage.setItem('linkbot_bio_text', text);
-        }
-      } catch (e) {}
 
       const data = await response.json();
       renderResults(data);

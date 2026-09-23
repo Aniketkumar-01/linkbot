@@ -93,15 +93,6 @@
                   <p class="text-xs text-on-surface-variant mt-1">If omitted, candidate sourcing will be skipped and only profile synthesis will run.</p>
                 </div>
               </div>
-              <div class="mt-space-md pt-space-md border-t border-surface-variant/40 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <p class="text-xs text-on-surface-variant max-w-xl">
-                  Keys are saved locally in your browser. They are processed securely during analysis and are never stored on our servers.
-                </p>
-                <div class="flex items-center gap-2">
-                  <span id="clear-data-msg" class="text-xs text-primary font-medium opacity-0 transition-opacity">Data cleared!</span>
-                  <button id="clear-data-btn" class="px-4 py-1.5 rounded-lg border border-error/50 text-error hover:bg-error/10 text-xs font-semibold transition-colors">Clear saved data on this device</button>
-                </div>
-              </div>
             </div>
           </div>
           
@@ -179,6 +170,10 @@
         </div>
       </div>
     </main>
+    
+    <footer class="mt-8 mb-4 text-center text-on-surface-variant text-sm pb-8">
+      <a href="/static/privacy-policy.html" class="hover:text-primary transition-colors">Privacy Policy</a>
+    </footer>
   </div>
 
   <template id="profile-template">
