@@ -165,25 +165,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 <table class="suggestions-table">
                     <thead>
                         <tr>
-                            <th>Score</th>
                             <th>Candidate</th>
                             <th>Category</th>
-                            <th>Reasoning</th>
-                            <th>Actions</th>
+                            <th>Action</th>
+                            <th>Links</th>
                         </tr>
                     </thead>
                     <tbody>
         `;
         
         suggestions.forEach(s => {
-            const scoreColor = s.relevance_score >= 80 ? '#10B981' : (s.relevance_score >= 50 ? '#F59E0B' : '#EF4444');
+            const actionClass = s.action === 'Follow' ? 'badge-follow' : 'badge-connect';
             tableHTML += `
                 <tr>
-                    <td>
-                        <div class="score-badge-table" style="color: ${scoreColor}; border: 1px solid ${scoreColor}30; background: ${scoreColor}15;">
-                            ${s.relevance_score}
-                        </div>
-                    </td>
                     <td>
                         <div class="candidate-info">
                             <div class="candidate-name">${s.name}</div>
@@ -191,22 +185,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                     </td>
                     <td><span class="category-badge-table">${s.category}</span></td>
-                    <td>
-                        <div class="reason-text">
-                            ${s.reason ? `<strong>Why Connect:</strong> ${s.reason}<br/>` : ''}
-                            ${s.psychological_profile ? `<strong>Persona:</strong> ${s.psychological_profile}` : ''}
-                        </div>
-                    </td>
+                    <td><span class="action-badge ${actionClass}">${s.action || 'Connect'}</span></td>
                     <td>
                         <div class="table-actions">
                             <a href="${s.url}" target="_blank" class="action-btn-sm btn-primary" title="View Profile">
                                 <i class="fab fa-linkedin"></i>
                             </a>
-                            ${s.connect_message ? `
-                                <button class="action-btn-sm btn-secondary" onclick="copyToClipboard('${s.connect_message.replace(/'/g, "\\'")}')" title="Copy Message">
-                                    <i class="fas fa-copy"></i>
-                                </button>
-                            ` : ''}
                         </div>
                     </td>
                 </tr>

@@ -19,13 +19,8 @@ class LinkedInSuggestion(BaseModel):
     title: str
     url: str
     snippet: str
-    relevance_score: float = 0.0
     category: str = "Unknown"
-    reason: str = ""
     action: str = "Connect"
-    connect_message: str = ""
-    psychological_profile: str = ""
-    outreach_strategy: str = ""
 
     @classmethod
     def __get_validators__(cls):
@@ -35,8 +30,4 @@ class LinkedInSuggestion(BaseModel):
     def validate_to_json(cls, value):
         return value
 
-    def __init__(self, **data):
-        super().__init__(**data)
-        # Enforce LinkedIn connection note limit
-        if len(self.connect_message) > 300:
-            self.connect_message = self.connect_message[:297] + "..."
+

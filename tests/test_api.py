@@ -12,7 +12,7 @@ def mock_dependencies(mocker):
         "scrape_github_profile": mocker.patch("main.scrape_github_profile", new_callable=AsyncMock, return_value="GitHub profile text"),
         "analyze_profile": mocker.patch("main.analyze_profile_with_gemini", new_callable=AsyncMock, return_value=UserProfile(name="Test User", skills=["Python"])),
         "search": mocker.patch("main.search_for_connections", new_callable=AsyncMock, return_value=[LinkedInSuggestion(name="Peer", title="Eng", url="https://linkedin.com/in/peer", snippet="")]),
-        "rank": mocker.patch("main.rank_and_score_results", new_callable=AsyncMock, return_value=[LinkedInSuggestion(name="Peer", title="Eng", url="https://linkedin.com/in/peer", snippet="", relevance_score=90)])
+        "rank": mocker.patch("main.rank_and_score_results", new_callable=AsyncMock, return_value=[LinkedInSuggestion(name="Peer", title="Eng", url="https://linkedin.com/in/peer", snippet="")])
     }
 
 def test_analyze_profile_missing_gemini_key():
