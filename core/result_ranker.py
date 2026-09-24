@@ -1,21 +1,28 @@
-import httpx
 import json
-import re
-from google import genai
-from google.genai.errors import APIError
-from starlette.concurrency import run_in_threadpool
 import logging
+import re
+from typing import Optional
+import httpx
+from google import genai
+from starlette.concurrency import run_in_threadpool
 
 from .models import UserProfile, LinkedInSuggestion, ActionsResponse
+from utils.constants import DEFAULT_GEMINI_MODEL
 
 logger = logging.getLogger(__name__)
 
-async def rank_and_score_results(user_profile: UserProfile, suggestions: list[LinkedInSuggestion], client: httpx.AsyncClient, gemini_api_key: str = "") -> list[LinkedInSuggestion]:
+async def rank_and_score_results(
+    user_profile: UserProfile,
+    suggestions: list[LinkedInSuggestion],
+    client: Optional[httpx.AsyncClient] = None,
+    gemini_api_key: str = "",
+    model: str = DEFAULT_GEMINI_MODEL
+) -> list[LinkedInSuggestion]:
     """Deduplicates and assigns actions to the suggestions using Gemini."""
     if not suggestions:
         return []
         
-    # Deduplicate via one-liner dict comprehension
+    # Deduplicate via dictionary comprehension
     unique_suggestions = list({s.url: s for s in suggestions}.values())
     
     if user_profile.name:
@@ -55,7 +62,7 @@ async def rank_and_score_results(user_profile: UserProfile, suggestions: list[Li
         genai_client = genai.Client(api_key=gemini_api_key)
         response = await run_in_threadpool(
             genai_client.models.generate_content,
-            model='gemini-3.6-flash',
+            model=model,
             contents=prompt
         )
         

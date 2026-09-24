@@ -4,16 +4,16 @@ from urllib.parse import urlparse, urlunparse
 def clean_linkedin_url(url: str) -> str:
     """
     Cleans a LinkedIn URL by removing query parameters and trailing slashes.
-    Ensures it's a valid linkedin.com/in/ URL.
+    Ensures it's a valid linkedin.com/in/ URL with https scheme.
     """
     parsed = urlparse(url)
     if "linkedin.com" not in parsed.netloc:
         return url
     
-    # Reconstruct URL without query params or fragments
+    # Reconstruct URL without query params or fragments, ensuring https scheme
+    scheme = "https" if parsed.scheme in ("http", "https") else parsed.scheme
     clean_path = parsed.path.rstrip('/')
-    cleaned_url = urlunparse((parsed.scheme, parsed.netloc, clean_path, '', '', ''))
-    return cleaned_url
+    return urlunparse((scheme, parsed.netloc, clean_path, '', '', ''))
 
 def extract_name_from_title(title: str) -> str:
     """
@@ -26,7 +26,8 @@ def extract_name_from_title(title: str) -> str:
         name = parts[0].strip()
         # Remove "LinkedIn" if it's somehow in the name part
         name = name.replace("LinkedIn", "").strip()
-        return name
+        if name:
+            return name
     return "Unknown"
 
 def extract_title_from_snippet(snippet: str) -> str:
@@ -36,7 +37,9 @@ def extract_title_from_snippet(snippet: str) -> str:
     # Simple heuristic: first line or before the first period
     parts = snippet.split('.')
     if parts:
-        return parts[0].strip()
+        title = parts[0].strip()
+        if title:
+            return title
     return "LinkedIn Member"
 
 def is_valid_github_url(url: str) -> bool:
@@ -51,7 +54,6 @@ def is_valid_github_url(url: str) -> bool:
             return False
             
         # Reject raw IP addresses (Security Auditor check)
-        # urlparse hostname handles stripping ports
         if parsed.hostname and re.match(r'^\d+\.\d+\.\d+\.\d+$', parsed.hostname):
             return False
             

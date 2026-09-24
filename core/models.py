@@ -1,5 +1,5 @@
 from typing import List, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 class UserProfile(BaseModel):
     name: str = ""
@@ -21,14 +21,14 @@ class LinkedInSuggestion(BaseModel):
     snippet: str
     category: str = "Unknown"
     action: str = "Connect"
+    connect_message: Optional[str] = None
 
+    @field_validator("connect_message")
     @classmethod
-    def __get_validators__(cls):
-        yield cls.validate_to_json
-
-    @classmethod
-    def validate_to_json(cls, value):
-        return value
+    def truncate_connect_message(cls, v: Optional[str]) -> Optional[str]:
+        if v and len(v) > 300:
+            return v[:297] + "..."
+        return v
 
 class ActionAssignment(BaseModel):
     url: str

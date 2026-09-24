@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Ingestion Tab Switching Logic
+  // Tab Switching Logic
   const tabButtons = document.querySelectorAll('.tab-button');
   const tabContents = {
     pdf: document.getElementById('tab-content-pdf'),
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
   analyzeBtn.addEventListener('click', async () => {
     const geminiKey = document.getElementById('gemini-key').value.trim();
     if (!geminiKey) {
-      alert('Gemini API Key is required.');
+      alert('Gemini API Key is required. Please open API Settings to enter it.');
       engineDrawer.classList.remove('hidden');
       return;
     }
@@ -100,14 +100,14 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (activeTab === 'github') {
       const url = document.getElementById('github-url').value.trim();
       if (!url) {
-        alert('Please enter a GitHub URL.');
+        alert('Please enter a GitHub profile URL.');
         return;
       }
       formData.append('github_url', url);
     } else if (activeTab === 'linkedin') {
       const text = document.getElementById('bio-text').value.trim();
       if (!text) {
-        alert('Please paste a bio or summary.');
+        alert('Please paste your professional bio or summary.');
         return;
       }
       formData.append('bio_text', text);
@@ -118,16 +118,15 @@ document.addEventListener('DOMContentLoaded', () => {
     analyzeBtn.disabled = true;
     analyzeBtn.innerHTML = `
       <span class="material-symbols-outlined text-[24px] animate-spin">progress_activity</span>
-      <span>Synthesizing structured user profile...</span>
+      <span>Analyzing profile...</span>
     `;
     
     tracker.classList.remove('hidden');
     
-    const serperKeyForTracking = document.getElementById('serper-key').value.trim();
-    if (serperKeyForTracking) {
-      tracker.innerHTML = 'Crawling SERP Nodes & Ranking...';
+    if (serperKey) {
+      tracker.innerHTML = 'Finding relevant LinkedIn connections...';
     } else {
-      tracker.innerHTML = 'Serper key omitted - Skipping candidate search...';
+      tracker.innerHTML = 'Analyzing profile (Search skipped — Serper key omitted)...';
     }
     
     resultsSection.classList.add('hidden');
@@ -158,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await response.json();
       renderResults(data);
       
-      tracker.innerHTML = 'Step Complete &bull; 100%';
+      tracker.innerHTML = 'Analysis complete!';
       resultsSection.classList.remove('hidden');
       resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
@@ -172,43 +171,77 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function renderResults(data) {
-    const profile = data.profile;
-    const suggestions = data.suggestions;
+    const profile = data.profile || {};
+    const suggestions = data.suggestions || [];
 
     // Render Profile
     const profileTpl = document.getElementById('profile-template').content.cloneNode(true);
-    profileTpl.querySelector('.profile-name').textContent = profile.name || 'Unknown';
+    profileTpl.querySelector('.profile-name').textContent = profile.name || 'Professional';
     profileTpl.querySelector('.profile-headline').textContent = profile.headline || '';
-    profileTpl.querySelector('.profile-location').textContent = profile.location || 'Unknown Location';
-    profileTpl.querySelector('.profile-experience').textContent = profile.experience_years ? `${profile.experience_years} Years Experience` : 'N/A';
-    profileTpl.querySelector('.profile-education').textContent = profile.education || 'N/A';
+    profileTpl.querySelector('.profile-location').textContent = profile.location || 'Location Not Specified';
+    profileTpl.querySelector('.profile-experience').textContent = profile.experience_years ? `${profile.experience_years} Years Experience` : 'Experience Not Specified';
+    
+    // Format education safely
+    const edu = profile.education;
+    let eduText = 'N/A';
+    if (Array.isArray(edu) && edu.length > 0) {
+      eduText = edu.join(' • ');
+    } else if (typeof edu === 'string' && edu.trim()) {
+      eduText = edu;
+    }
+    profileTpl.querySelector('.profile-education').textContent = eduText;
     
     const skillsContainer = profileTpl.querySelector('.profile-skills');
-    (profile.skills || []).slice(0, 10).forEach((skill, i) => {
+    const skillsList = profile.skills || [];
+    if (skillsList.length > 0) {
+      skillsList.slice(0, 15).forEach((skill, i) => {
+        const span = document.createElement('span');
+        const classes = ['text-primary', 'text-secondary', 'text-on-surface', 'text-primary-fixed', 'text-secondary-fixed'];
+        span.className = `px-2.5 py-1 rounded-md bg-surface-container-high font-label-sm font-medium shadow-sm ${classes[i % classes.length]}`;
+        span.textContent = skill;
+        skillsContainer.appendChild(span);
+      });
+    } else {
       const span = document.createElement('span');
-      // Alternate colors based on index for a dynamic look
-      const classes = ['text-primary', 'text-secondary', 'text-on-surface', 'text-primary-fixed', 'text-secondary-fixed'];
-      span.className = `px-2.5 py-1 rounded-md bg-surface-container-high font-label-sm font-medium shadow-sm ${classes[i % classes.length]}`;
-      span.textContent = skill;
+      span.className = 'text-on-surface-variant font-body-sm';
+      span.textContent = 'None identified';
       skillsContainer.appendChild(span);
-    });
+    }
 
-    profileTpl.querySelector('.profile-interests').textContent = (profile.interests || []).join(' • ');
+    const interestsList = profile.interests || [];
+    profileTpl.querySelector('.profile-interests').textContent = interestsList.length > 0 ? interestsList.join(' • ') : 'General Networking';
 
     profileContainer.innerHTML = '';
     profileContainer.appendChild(profileTpl);
 
     // Render Candidates
     candidateGrid.innerHTML = '';
+    if (suggestions.length === 0) {
+      candidateGrid.innerHTML = `
+        <div class="col-span-full text-center py-12 text-on-surface-variant bg-surface-container-low/40 rounded-2xl">
+          <span class="material-symbols-outlined text-[48px] text-primary/60 mb-2">person_search</span>
+          <p class="font-headline-sm text-on-surface">No live candidates fetched</p>
+          <p class="font-body-md text-sm mt-1">To search and rank live LinkedIn profiles, make sure to add your Serper API Key in API Settings.</p>
+        </div>
+      `;
+      return;
+    }
+
     suggestions.forEach(suggestion => {
       const candTpl = document.getElementById('candidate-template').content.cloneNode(true);
       const card = candTpl.querySelector('.candidate-card');
       
       // Set type for filtering
-      card.setAttribute('data-type', suggestion.action);
+      card.setAttribute('data-type', suggestion.action || 'Connect');
       
       // Initials
-      const initials = (suggestion.name || '??').split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+      const initials = (suggestion.name || '??')
+        .split(' ')
+        .filter(Boolean)
+        .map(n => n[0])
+        .join('')
+        .substring(0, 2)
+        .toUpperCase() || '??';
       candTpl.querySelector('.initials-badge').textContent = initials;
 
       // Category badge
@@ -226,10 +259,14 @@ document.addEventListener('DOMContentLoaded', () => {
         actBadge.innerHTML = `<span class="material-symbols-outlined text-[13px]">rss_feed</span><span>Follow</span>`;
       }
 
-      candTpl.querySelector('.candidate-name').textContent = suggestion.name;
-      candTpl.querySelector('.candidate-title').textContent = suggestion.title;
+      candTpl.querySelector('.candidate-name').textContent = suggestion.name || 'Unknown';
+      candTpl.querySelector('.candidate-title').textContent = suggestion.title || 'LinkedIn Member';
 
-      
+      const snippetEl = candTpl.querySelector('.candidate-snippet');
+      if (snippetEl) {
+        snippetEl.textContent = suggestion.snippet || '';
+      }
+
       const link = candTpl.querySelector('.candidate-url');
       if (suggestion.url) {
         link.href = suggestion.url;
@@ -254,9 +291,9 @@ document.addEventListener('DOMContentLoaded', () => {
       
       filterBtns.forEach(b => {
         if (b.getAttribute('data-filter') === currentFilter) {
-          b.className = "filter-btn px-space-md py-1.5 rounded-full bg-primary-container text-on-primary-container font-label-md transition-all";
+          b.className = "filter-btn px-space-md py-1.5 rounded-full bg-primary-container text-on-primary-container font-label-md transition-all cursor-pointer";
         } else {
-          b.className = "filter-btn px-space-md py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md transition-all";
+          b.className = "filter-btn px-space-md py-1.5 rounded-full bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md transition-all cursor-pointer";
         }
       });
 

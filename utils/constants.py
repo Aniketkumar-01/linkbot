@@ -1,3 +1,5 @@
+import os
+
 # Categories for LinkedIn suggestions
 CATEGORY_SAME_ROLE = "Same Role"
 CATEGORY_INDUSTRY_PEER = "Industry Peer"
@@ -7,7 +9,10 @@ CATEGORY_ALUMNI = "Alumni"
 CATEGORY_ADJACENT = "Adjacent Role"
 CATEGORY_UNKNOWN = "Unknown"
 
-# Search templates for DuckDuckGo
+# Default Gemini model
+DEFAULT_GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+
+# Search query templates for LinkedIn discovery
 SEARCH_TEMPLATES = {
     CATEGORY_SAME_ROLE: 'site:linkedin.com/in/ "{title}" "{skill1}" "{skill2}"',
     CATEGORY_INDUSTRY_PEER: 'site:linkedin.com/in/ "{industry}" "Senior" OR "Lead" "{location}"',

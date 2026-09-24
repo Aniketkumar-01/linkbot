@@ -1,50 +1,63 @@
 # LinkBot 🔗
 
-LinkBot is a free, AI-powered Streamlit web application that analyzes your resume or GitHub profile to find relevant professionals you should connect with or follow on LinkedIn.
+LinkBot is a fast, AI-powered web application that analyzes your resume, GitHub profile, or bio to identify and recommend relevant professionals to connect with or follow on LinkedIn.
 
-## Features
-- **Intelligent Profile Analysis**: Uses Google Gemini API to extract your skills, titles, and experience from a PDF resume or GitHub profile.
-- **Automated Discovery**: Uses DuckDuckGo search (or Serper.dev) to find relevant LinkedIn profiles without scraping LinkedIn directly.
-- **Smart Categorization**: Groups suggestions into categories like "Same Role", "Recruiters", "Thought Leaders", and "Alumni".
-- **Completely Free**: No paid APIs required (Gemini has a generous free tier, DuckDuckGo is free).
-- **Privacy First**: No LinkedIn login required. Does not store your resume.
+## ✨ Features
+- **Intelligent Profile Analysis**: Leverages Google Gemini to extract your skills, titles, experience, and background from a PDF resume, GitHub profile, or bio text.
+- **Automated LinkedIn Discovery**: Uses Serper.dev (Google Search API) to find real, relevant LinkedIn profiles without scraping LinkedIn directly.
+- **Concurrent Search Execution**: Orchestrates multi-category discovery (Same Role, Industry Peers, Recruiters, Thought Leaders, Alumni) in parallel for ultra-fast results.
+- **Smart Connection Actions**: Uses Gemini to analyze candidates and recommend whether to "Connect" (peers, hiring managers, recruiters) or "Follow" (industry leaders, executives).
+- **Stateless & Privacy-First (BYOK)**: Bring Your Own Key architecture. No logins, no database, no stored resumes or keys.
 
-## Setup Instructions
+## 🛠️ Tech Stack
+- **Backend**: FastAPI, Uvicorn, Pydantic v2, SlowAPI (rate limiting), HTTPX (async HTTP client), pdfplumber.
+- **Frontend**: Vanilla JavaScript, Tailwind CSS, Google Fonts & Material Symbols.
+- **AI / APIs**: Google Gemini API (`google-genai`), Serper.dev API, GitHub REST API.
 
-### Local Development
+## 🚀 Quick Start
 
-1. Clone the repository
-2. Create a virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-4. Run the app:
-   ```bash
-   streamlit run app.py
-   ```
+### 1. Prerequisites
+- Python 3.10+
+- A Google Gemini API key (free at [Google AI Studio](https://aistudio.google.com/))
+- (Optional) A Serper.dev API key for live LinkedIn profile discovery (free tier available at [Serper.dev](https://serper.dev/))
 
-### Deployment (Streamlit Community Cloud)
+### 2. Setup
+```bash
+# Clone the repository
+git clone https://github.com/Aniketkumar-01/linkbot.git
+cd linkbot
 
-1. Push your code to a public GitHub repository.
-2. Go to [share.streamlit.io](https://share.streamlit.io).
-3. Connect your GitHub account and select your repository.
-4. Set the main file path to `app.py`.
-5. (Optional) In the advanced settings, add your API keys to the Secrets:
-   ```toml
-   GEMINI_API_KEY = "your-google-gemini-key"
-   SERPER_API_KEY = "your-optional-serper-key"
-   ```
-6. Click Deploy!
+# Create and activate virtual environment
+python -m venv venv
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
 
-## API Keys
-- **Google Gemini API**: Get a free key at [Google AI Studio](https://aistudio.google.com/). Required for profile analysis.
-- **Serper.dev API (Optional)**: Get 2,500 free queries at [Serper.dev](https://serper.dev/). Recommended for higher-quality search results.
+# Install dependencies
+pip install -r requirements.txt
+```
 
-## Limitations & Disclaimer
-- This app does **not** auto-connect or auto-follow on LinkedIn, as that violates their Terms of Service and can result in account bans. It provides you with direct links to manually review and connect.
-- DuckDuckGo search limits may apply if you run the app continuously in a loop.
+### 3. Run Locally
+```bash
+uvicorn main:app --reload --port 8000
+```
+Open your browser and navigate to `http://localhost:8000`.
+
+## 🌐 Deployment (Render)
+
+LinkBot is configured for deployment on [Render](https://render.com) using `render.yaml`:
+1. Push your repository to GitHub.
+2. Link your repository in Render as a Web Service.
+3. Build Command: `pip install -r requirements.txt`
+4. Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+
+## 🔒 Privacy & Safety
+- **No LinkedIn Credentials**: LinkBot never asks for or stores your LinkedIn credentials.
+- **Compliance**: Does not scrape LinkedIn directly or automate actions (connecting/messaging) on LinkedIn, keeping your account safe from Terms of Service violations.
+- **Zero Retention**: Uploaded resumes and API keys are processed transiently in memory and never persisted to disk or databases.
+
+## 🧪 Running Tests
+```bash
+pytest
+```

@@ -1,17 +1,16 @@
 import json
+import logging
 import re
 from google import genai
 from google.genai.errors import APIError
-from pydantic import ValidationError
 from starlette.concurrency import run_in_threadpool
-import logging
 
 from .models import UserProfile
-from utils.constants import COMMON_SKILLS
+from utils.constants import COMMON_SKILLS, DEFAULT_GEMINI_MODEL
 
 logger = logging.getLogger(__name__)
 
-async def analyze_profile_with_gemini(text: str, api_key: str) -> UserProfile:
+async def analyze_profile_with_gemini(text: str, api_key: str, model: str = DEFAULT_GEMINI_MODEL) -> UserProfile:
     """
     Uses Gemini to extract structured data from raw resume/GitHub text asynchronously.
     """
@@ -48,7 +47,7 @@ async def analyze_profile_with_gemini(text: str, api_key: str) -> UserProfile:
         # Offload synchronous SDK call to threadpool to avoid blocking event loop
         response = await run_in_threadpool(
             client.models.generate_content,
-            model='gemini-3.6-flash',
+            model=model,
             contents=prompt
         )
         
@@ -75,7 +74,7 @@ def fallback_extraction(text: str) -> UserProfile:
     found_skills = [skill for skill in COMMON_SKILLS if skill.lower() in text.lower()]
     
     # Try to extract a name if it's formatted as "Name: John Doe"
-    name = "User (Fallback Extraction)"
+    name = "Professional"
     name_match = re.search(r'Name:\s*([A-Za-z\s]+)', text)
     if name_match:
         name = name_match.group(1).strip()

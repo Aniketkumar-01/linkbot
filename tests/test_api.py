@@ -4,7 +4,6 @@ from fastapi.testclient import TestClient
 from main import app
 from core.models import UserProfile, LinkedInSuggestion
 
-
 @pytest.fixture
 def mock_dependencies(mocker):
     return {
@@ -25,7 +24,7 @@ def test_analyze_profile_no_inputs():
     with TestClient(app) as client:
         response = client.post("/api/analyze", data={"gemini_key": "dummy_key"})
         assert response.status_code == 400
-        assert "Please provide a resume, GitHub URL, or LinkedIn URL" in response.json()["detail"]
+        assert "Please provide a resume, GitHub URL, or professional summary/bio." in response.json()["detail"]
 
 def test_analyze_profile_invalid_github_url():
     with TestClient(app) as client:
@@ -37,6 +36,7 @@ def test_analyze_profile_success(mock_dependencies):
     with TestClient(app) as client:
         response = client.post("/api/analyze", data={
             "gemini_key": "dummy_key",
+            "serper_key": "dummy_serper",
             "github_url": "https://github.com/test",
             "linkedin_url": "https://linkedin.com/in/test"
         })
@@ -52,6 +52,7 @@ def test_analyze_profile_success(mock_dependencies):
         # Ensure keys are not leaked in the response
         response_text = response.text
         assert "dummy_key" not in response_text
+        assert "dummy_serper" not in response_text
 
 def test_analyze_profile_internal_error_is_safe(mock_dependencies):
     # Force an internal error

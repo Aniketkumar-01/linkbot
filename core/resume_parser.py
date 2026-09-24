@@ -1,3 +1,4 @@
+# pyrefly: ignore [missing-import]
 import pdfplumber
 import re
 import logging
@@ -10,6 +11,8 @@ def extract_text_from_pdf(pdf_file) -> str:
     """
     full_text = ""
     try:
+        if hasattr(pdf_file, "seek"):
+            pdf_file.seek(0)
         with pdfplumber.open(pdf_file) as pdf:
             for page in pdf.pages:
                 # Extract text preserving layout as much as possible
@@ -19,7 +22,6 @@ def extract_text_from_pdf(pdf_file) -> str:
     except Exception as e:
         # Fallback if there's an issue with pdfplumber
         logger.error(f"Error extracting PDF: {e}")
-        pass
     
     return full_text
 
