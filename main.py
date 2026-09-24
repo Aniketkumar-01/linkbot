@@ -27,12 +27,18 @@ logger = logging.getLogger(__name__)
 class AppState:
     http_client: Optional[httpx.AsyncClient] = None
 
+def get_http_client() -> httpx.AsyncClient:
+    """Returns the shared AsyncClient, creating one if not yet initialized."""
+    if AppState.http_client is None or AppState.http_client.is_closed:
+        AppState.http_client = httpx.AsyncClient(timeout=15.0)
+    return AppState.http_client
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Initialize a shared AsyncClient for connection pooling
     AppState.http_client = httpx.AsyncClient(timeout=15.0)
     yield
-    if AppState.http_client:
+    if AppState.http_client and not AppState.http_client.is_closed:
         await AppState.http_client.aclose()
 
 limiter = Limiter(key_func=get_remote_address)
@@ -70,8 +76,12 @@ async def analyze_profile(
     bio_text: Optional[str] = Form(None),
     linkedin_url: Optional[str] = Form(None),
 ):
+    gemini_key = (gemini_key or "").strip()
     if not gemini_key:
         raise HTTPException(status_code=400, detail="Gemini API Key is required")
+
+    serper_key = serper_key.strip() if serper_key else None
+    http_client = get_http_client()
 
     extracted_text_parts = []
 
@@ -100,7 +110,7 @@ async def analyze_profile(
             raise HTTPException(status_code=400, detail="GitHub URL is too long.")
         if is_valid_github_url(github_url):
             try:
-                github_text = await scrape_github_profile(github_url, AppState.http_client)
+                github_text = await scrape_github_profile(github_url, http_client)
                 if github_text:
                     extracted_text_parts.append(github_text)
             except Exception:
@@ -147,7 +157,7 @@ async def analyze_profile(
             # Step 2: Search LinkedIn
             raw_suggestions = await search_for_connections(
                 user_profile,
-                AppState.http_client,
+                http_client,
                 serper_api_key=serper_key,
                 progress_callback=None
             )
@@ -156,7 +166,7 @@ async def analyze_profile(
             final_results = await rank_and_score_results(
                 user_profile,
                 raw_suggestions,
-                AppState.http_client,
+                http_client,
                 gemini_key
             )
         
@@ -171,13 +181,13 @@ async def analyze_profile(
     except Exception as e:
         logger.exception("Internal Server Error during profile analysis pipeline.")
         error_msg = str(e).lower()
-        if "api_key" in error_msg or "403" in error_msg or "permission" in error_msg or "invalid argument" in error_msg:
+        if "api_key" in error_msg or "403" in error_msg or "permission" in error_msg or "invalid argument" in error_msg or "not valid" in error_msg or "unauthorized" in error_msg:
             friendly_message = "It looks like your Gemini API key might be invalid or expired. Please check your API Settings."
         elif "quota" in error_msg or "429" in error_msg or "exhausted" in error_msg:
             friendly_message = "Your AI service quota has been exceeded. Please check your API account."
         elif "json" in error_msg or "validation" in error_msg or "parse" in error_msg:
             friendly_message = "We couldn't process the input data. Please make sure your URLs or files are valid."
         else:
-            friendly_message = "An internal error occurred while analyzing your profile. Please try again in a moment."
+            friendly_message = "An internal error occurred while analyzing your profile. Please check your API key and try again in a moment."
             
         raise HTTPException(status_code=500, detail=friendly_message)

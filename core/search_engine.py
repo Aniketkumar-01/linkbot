@@ -1,5 +1,6 @@
 import asyncio
 import logging
+from typing import Optional
 import httpx
 from utils.constants import (
     SEARCH_TEMPLATES,
@@ -67,11 +68,16 @@ def generate_search_queries(profile: UserProfile) -> dict[str, list[str]]:
     return queries
 
 
-async def execute_search_serper(query: str, category: str, api_key: str, client: httpx.AsyncClient, max_results: int = 20) -> list[LinkedInSuggestion]:
+async def execute_search_serper(query: str, category: str, api_key: str, client: Optional[httpx.AsyncClient] = None, max_results: int = 20) -> list[LinkedInSuggestion]:
     """
     Executes a single search using Serper.dev API asynchronously.
     """
     suggestions = []
+    should_close = False
+    if client is None:
+        client = httpx.AsyncClient(timeout=15.0)
+        should_close = True
+
     try:
         headers = {
             'X-API-KEY': api_key,
@@ -107,12 +113,15 @@ async def execute_search_serper(query: str, category: str, api_key: str, client:
                 ))
     except Exception as e:
         logger.error(f"Serper search error: {e}")
+    finally:
+        if should_close:
+            await client.aclose()
         
     return suggestions
 
 async def search_for_connections(
     profile: UserProfile,
-    client: httpx.AsyncClient,
+    client: Optional[httpx.AsyncClient] = None,
     serper_api_key: str = "",
     progress_callback=None
 ) -> list[LinkedInSuggestion]:
@@ -124,22 +133,31 @@ async def search_for_connections(
         
     queries_dict = generate_search_queries(profile)
     
-    tasks = []
-    for category, queries in queries_dict.items():
-        for query in queries:
-            tasks.append(execute_search_serper(query, category, serper_api_key, client))
-            
-    if not tasks:
-        return []
+    should_close = False
+    if client is None:
+        client = httpx.AsyncClient(timeout=15.0)
+        should_close = True
 
-    # Execute all searches concurrently for optimal performance
-    search_results = await asyncio.gather(*tasks, return_exceptions=True)
-    
-    all_suggestions = []
-    for res in search_results:
-        if isinstance(res, list):
-            all_suggestions.extend(res)
-        elif isinstance(res, Exception):
-            logger.error(f"Concurrent search execution error: {res}")
-            
-    return all_suggestions
+    try:
+        tasks = []
+        for category, queries in queries_dict.items():
+            for query in queries:
+                tasks.append(execute_search_serper(query, category, serper_api_key, client))
+                
+        if not tasks:
+            return []
+
+        # Execute all searches concurrently for optimal performance
+        search_results = await asyncio.gather(*tasks, return_exceptions=True)
+        
+        all_suggestions = []
+        for res in search_results:
+            if isinstance(res, list):
+                all_suggestions.extend(res)
+            elif isinstance(res, Exception):
+                logger.error(f"Concurrent search execution error: {res}")
+                
+        return all_suggestions
+    finally:
+        if should_close:
+            await client.aclose()

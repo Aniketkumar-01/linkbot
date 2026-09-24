@@ -13,8 +13,10 @@ logger = logging.getLogger(__name__)
 async def analyze_profile_with_gemini(text: str, api_key: str, model: str = DEFAULT_GEMINI_MODEL) -> UserProfile:
     """
     Uses Gemini to extract structured data from raw resume/GitHub text asynchronously.
+    Includes automatic model fallback and graceful keyword fallback.
     """
-    client = genai.Client(api_key=api_key)
+    cleaned_key = (api_key or "").strip()
+    client = genai.Client(api_key=cleaned_key)
     
     prompt = f"""
     You are an expert career advisor and technical recruiter.
@@ -43,29 +45,48 @@ async def analyze_profile_with_gemini(text: str, api_key: str, model: str = DEFA
     </user_provided_text>
     """
     
-    try:
-        # Offload synchronous SDK call to threadpool to avoid blocking event loop
-        response = await run_in_threadpool(
-            client.models.generate_content,
-            model=model,
-            contents=prompt
-        )
-        
-        # Find the JSON object anywhere in the response text securely
-        match = re.search(r'\{.*\}', response.text, re.DOTALL)
-        if not match:
-            raise ValueError("No JSON object found in response")
+    # Try preferred model first, then standard fallback models
+    models_to_try = list(dict.fromkeys([model, "gemini-2.0-flash", "gemini-1.5-flash"]))
+    
+    response = None
+    last_error = None
+    
+    for m in models_to_try:
+        try:
+            response = await run_in_threadpool(
+                client.models.generate_content,
+                model=m,
+                contents=prompt
+            )
+            if response and response.text:
+                break
+        except APIError as e:
+            last_error = e
+            err_lower = str(e).lower()
+            # If the error is an API key or permission problem, raise early
+            if "api_key" in err_lower or "403" in err_lower or "permission" in err_lower or "not valid" in err_lower:
+                raise ValueError(f"Gemini API key error: {str(e)}")
+            logger.warning(f"Model '{m}' API error: {e}. Trying fallback model if available...")
+            continue
+        except Exception as e:
+            last_error = e
+            logger.warning(f"Model '{m}' call failed: {e}. Trying fallback model if available...")
+            continue
             
-        data = json.loads(match.group(0))
-        # Validate through Pydantic
-        return UserProfile(**data)
-        
-    except APIError as e:
-        raise ValueError(f"Gemini API error: {str(e)}")
-    except Exception as e:
-        logger.error(f"Gemini analysis parsing or internal error failed, using fallback: {e}")
-        # Fallback to basic extraction
-        return fallback_extraction(text)
+    if response and response.text:
+        try:
+            # Find the JSON object anywhere in the response text securely
+            match = re.search(r'\{.*\}', response.text, re.DOTALL)
+            if match:
+                data = json.loads(match.group(0))
+                return UserProfile(**data)
+            else:
+                logger.warning("No JSON object found in Gemini response, falling back to heuristic extraction.")
+        except Exception as e:
+            logger.warning(f"Failed to parse Gemini JSON response ({e}), falling back to heuristic extraction.")
+
+    logger.error(f"Gemini analysis unavailable or failed ({last_error}), using fallback extraction.")
+    return fallback_extraction(text)
 
 def fallback_extraction(text: str) -> UserProfile:
     """

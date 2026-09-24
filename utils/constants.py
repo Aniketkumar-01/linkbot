@@ -9,8 +9,8 @@ CATEGORY_ALUMNI = "Alumni"
 CATEGORY_ADJACENT = "Adjacent Role"
 CATEGORY_UNKNOWN = "Unknown"
 
-# Default Gemini model
-DEFAULT_GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+# Default Gemini model - using standard Google GenAI Flash models
+DEFAULT_GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
 
 # Search query templates for LinkedIn discovery
 SEARCH_TEMPLATES = {

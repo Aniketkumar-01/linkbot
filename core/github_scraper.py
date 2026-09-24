@@ -19,6 +19,11 @@ async def scrape_github_profile(github_url: str, client: httpx.AsyncClient) -> s
     if not username:
         return "Invalid GitHub URL."
 
+    should_close = False
+    if client is None:
+        client = httpx.AsyncClient(timeout=15.0)
+        should_close = True
+
     try:
         headers = {
             "Accept": "application/vnd.github.v3+json",
@@ -65,3 +70,6 @@ async def scrape_github_profile(github_url: str, client: httpx.AsyncClient) -> s
         return "Error fetching GitHub profile: Timeout"
     except Exception as e:
         return f"Error fetching GitHub profile: {str(e)}"
+    finally:
+        if should_close:
+            await client.aclose()
